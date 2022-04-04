@@ -1,0 +1,12 @@
+Source: ros-galactic-smacc2
+Section: misc
+Priority: optional
+Maintainer: Pablo Inigo Blasco <pablo@robosoft.ai>
+Build-Depends: debhelper (>= 9.0.0), libboost-thread-dev, liblttng-ust-dev, ros-galactic-ament-cmake, ros-galactic-rcl, ros-galactic-rclcpp, ros-galactic-rclcpp-action, ros-galactic-smacc2-msgs, ros-galactic-tracetools, ros-galactic-tracetools-launch, ros-galactic-tracetools-trace, ros-galactic-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-galactic-smacc2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libboost-thread1.71.0, liblttng-ust-dev, ros-galactic-rcl, ros-galactic-rclcpp, ros-galactic-rclcpp-action, ros-galactic-smacc2-msgs, ros-galactic-tracetools, ros-galactic-tracetools-launch, ros-galactic-tracetools-trace, ros-galactic-ros-workspace
+Description: An Event-Driven, Asynchronous, Behavioral State Machine Library for ROS2 (Robotic Operating System) applications written in C++.
