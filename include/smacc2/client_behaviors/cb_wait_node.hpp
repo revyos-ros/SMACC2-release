@@ -20,34 +20,29 @@
 
 #pragma once
 
-#include <smacc2/client_bases/smacc_action_client_base.hpp>
+#include <functional>
+#include <rclcpp/rclcpp.hpp>
 #include <smacc2/smacc_asynchronous_client_behavior.hpp>
 
 namespace smacc2
 {
 namespace client_behaviors
 {
-using namespace smacc2::client_bases;
+using namespace std::chrono_literals;
 
-// waits the action server is available in the current orthogonal
-class CbWaitActionServer : public smacc2::SmaccAsyncClientBehavior
+// Asynchronous behavior that waits to a topic message to send EvCbSuccess event
+// a guard function can be set to use conditions on the contents
+class CbWaitNode : public smacc2::SmaccAsyncClientBehavior
 {
 public:
-  CbWaitActionServer(std::chrono::milliseconds timeout);
-  virtual ~CbWaitActionServer();
-
-  template <typename TOrthogonal, typename TSourceObject>
-  void onOrthogonalAllocation()
-  {
-    SmaccAsyncClientBehavior::onOrthogonalAllocation<TOrthogonal, TSourceObject>();
-    this->requiresClient(client_);
-  }
+  CbWaitNode(std::string nodeName);
 
   void onEntry() override;
 
-private:
-  ISmaccActionClient * client_;
-  std::chrono::milliseconds timeout_;
+protected:
+  std::string nodeName_;
+
+  rclcpp::Rate rate_;
 };
 }  // namespace client_behaviors
 }  // namespace smacc2
