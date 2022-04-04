@@ -1,9 +1,11 @@
-name: "Doxygen Doc Deployment"
+name: "Doxygen Deployment"
 on:
   workflow_dispatch:
   push:
     branches:
       - master
+      - galactic
+      - foxy
 
 jobs:
   deploy-doc:
