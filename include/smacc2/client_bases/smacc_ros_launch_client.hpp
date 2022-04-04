@@ -20,34 +20,38 @@
 
 #pragma once
 
-#include <smacc2/client_bases/smacc_action_client_base.hpp>
-#include <smacc2/smacc_asynchronous_client_behavior.hpp>
+#include <smacc2/smacc_client.hpp>
+#include <smacc2/smacc_state_machine.hpp>
+
+#include <rclcpp_action/client.hpp>
+#include <thread>
 
 namespace smacc2
 {
-namespace client_behaviors
+namespace client_bases
 {
-using namespace smacc2::client_bases;
-
-// waits the action server is available in the current orthogonal
-class CbWaitActionServer : public smacc2::SmaccAsyncClientBehavior
+class ClRosLaunch : public ISmaccClient
 {
 public:
-  CbWaitActionServer(std::chrono::milliseconds timeout);
-  virtual ~CbWaitActionServer();
+  ClRosLaunch(std::string packageName, std::string launchFilename);
 
-  template <typename TOrthogonal, typename TSourceObject>
-  void onOrthogonalAllocation()
-  {
-    SmaccAsyncClientBehavior::onOrthogonalAllocation<TOrthogonal, TSourceObject>();
-    this->requiresClient(client_);
-  }
+  virtual ~ClRosLaunch();
 
-  void onEntry() override;
+  void launch();
 
-private:
-  ISmaccActionClient * client_;
-  std::chrono::milliseconds timeout_;
+  void stop();
+
+  static std::future<std::string> executeRosLaunch(
+    std::string packageName, std::string launchFilename, std::function<bool()> cancelCondition);
+
+  std::string packageName_;
+
+  std::string launchFileName_;
+
+protected:
+  std::future<std::string> result_;
+
+  std::atomic<bool> cancellationToken_ = ATOMIC_VAR_INIT(false);
 };
-}  // namespace client_behaviors
+}  // namespace client_bases
 }  // namespace smacc2

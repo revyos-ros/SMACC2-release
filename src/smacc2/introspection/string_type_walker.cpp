@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/*****************************************************************************************************************
+ *
+ * 	 Authors: Pablo Inigo Blasco, Brett Aldrich
+ *
+ ******************************************************************************************************************/
+
 #include <smacc2/introspection/smacc_type_info.hpp>
 
 #include <algorithm>
@@ -84,6 +90,9 @@ TypeInfo::Ptr TypeInfo::getTypeInfoFromString(std::string inputtext)
   std::map<std::string, std::string> typesdict;
   std::map<std::string, std::string> typesdict_content;
 
+  // ITERATE on the current string to replace internal template types with ids (ie $Tx) replacements
+  // until plain template type
+
   while (!ok)
   {
     //simpletypeRE = r"[^<>,\s]+<[^<>]+>"
@@ -96,15 +105,9 @@ TypeInfo::Ptr TypeInfo::getTypeInfoFromString(std::string inputtext)
     std::smatch matches;
     std::regex regex(simpletypeRE);  // matches words beginning by "sub"
 
-    //matches = [m for m in enumerate(re.finditer(simpletypeRE, inputtext))]
     std::regex_search(inputtext, matches, regex);
 
-    //   if len(matches) == 0:
-    //     if len(typesdict) == 0:
-    //         tkey = "$T" + str(typecount)
-    //         typesdict[tkey] = inputtext
-    //     break
-
+    // checking ending condition
     if (matches.size() == 0)
     {
       if (typesdict.size() == 0)
@@ -114,44 +117,25 @@ TypeInfo::Ptr TypeInfo::getTypeInfoFromString(std::string inputtext)
       }
       break;
     }
-
-    // for i, m in matches:
-    //     tstr = m.group(0)
-    //     tkey = "$T" + str(typecount)
-    //     inputtext = inputtext.replace(tstr, tkey)
-    //     print("updating input text: " + inputtext)
-    //     typecount += 1
-    //     typesdict[tkey] = tstr
-
-    // find and replace internal templates with tokens
-    int i = 0;
-    for (auto & m : matches)
+    else
     {
-      std::string tstr = m;
-      auto tkey = "$T" + std::to_string(typecount);
-      replace(inputtext, tstr, tkey);
+      // find and replace all coincidences typestr to tokenid
+      int i = 0;
+      for (auto & m : matches)
+      {
+        std::string tstr = m;
+        auto tkey = "$T" + std::to_string(typecount);
+        replace(inputtext, tstr, tkey);
 
-      //std::cout << "updating input text:" << inputtext << std::endl;
+        typecount++;
+        typesdict[tkey] = tstr;
 
-      typecount++;
-      typesdict[tkey] = tstr;
-
-      i++;
+        i++;
+      }
     }
   }
 
-  // allbasetypes = set()
-  // for tkey in typesdict.keys():
-  //     flat = typesdict[tkey]
-  //     print flat
-  //     startindex = flat.index("<")
-  //     flat = flat[startindex + 1:-1]
-  //     basetypes = [t.strip() for t in flat.split(",")]
-  //     for b in basetypes:
-  //         if not "$" in b:
-  //             allbasetypes.add(b)
-
-  // SORT by token key to replace back in a single pass
+  // ---------- SORT by token key to replace back in a single pass --------
   std::vector<std::pair<std::string, std::string>> orderedTypedict;
   for (const auto & item : typesdict)
   {
@@ -159,14 +143,14 @@ TypeInfo::Ptr TypeInfo::getTypeInfoFromString(std::string inputtext)
   }
 
   std::sort(orderedTypedict.begin(), orderedTypedict.end(), [](auto & a, auto & b) {
-    return std::stoi(a.first.substr(2)) < std::stoi(b.first.substr(2));
+    return std::stoi(a.first.substr(2)) > std::stoi(b.first.substr(2));
   });
+  // -----------------------------------------------------------------
 
   std::set<std::string> allbasetypes;
   for (auto & typeentry : orderedTypedict /*typesdict*/)
   {
     auto flat = typeentry.second;
-    //std::cout << flat << std::endl;
 
     size_t startindex = flat.find("<");
     size_t endindex = flat.find(">");
@@ -176,7 +160,6 @@ TypeInfo::Ptr TypeInfo::getTypeInfoFromString(std::string inputtext)
         startindex + 1,
         endindex - startindex - 1);  // gets the list of template parameters in csv format
 
-      //std::cout << typeentry.first <<":" << flat << std::endl;
       typesdict_content[typeentry.first] = flat;
       std::vector<std::string> localbasetypes;
 
@@ -186,7 +169,6 @@ TypeInfo::Ptr TypeInfo::getTypeInfoFromString(std::string inputtext)
       {
         boost::trim(token);
         localbasetypes.push_back(token);
-        //std::cout << "base type: " << token << std::endl;
       }
 
       for (auto & b : localbasetypes)
@@ -240,6 +222,7 @@ TypeInfo::Ptr TypeInfo::getTypeInfoFromString(std::string inputtext)
     //std::cout << "replacing back: " << finaltype << std::endl;
   }
 
+  // --------- FINDING THE CURRENT TYPE -------------
   TypeInfo::Ptr roottype = nullptr;
   for (auto & t : types)
   {
@@ -249,6 +232,18 @@ TypeInfo::Ptr TypeInfo::getTypeInfoFromString(std::string inputtext)
       roottype = t;
       break;
     }
+  }
+
+  if (roottype == nullptr && globalNh_ != nullptr)
+  {
+    std::stringstream ss;
+    ss << "---------------" << std::endl;
+    ss << "TYPE STRING WALKER, type was not properly interpreted: " << std::endl
+       << " - " << inputtext.c_str() << std::endl
+       << " - " << originalinputtext << std::endl;
+
+    auto strmsg = ss.str();
+    RCLCPP_WARN_STREAM(globalNh_->get_logger(), strmsg);
   }
 
   // std::sort(types.begin(), types.end(),[](auto& a, auto& b)
@@ -272,6 +267,7 @@ TypeInfo::Ptr TypeInfo::getTypeInfoFromString(std::string inputtext)
     std::cout<<"---------" << std::endl;
     */
 
+  // Replacing back tokens in strings to get the whole final name
   for (size_t i = 0; i < types.size(); i++)
   {
     auto t = types[i];
@@ -337,10 +333,45 @@ TypeInfo::Ptr TypeInfo::getTypeInfoFromString(std::string inputtext)
   //RCLCPP_DEBUG_STREAM(nh_->get_logger(),"Current Database");
   for (auto & en : typeInfoDatabase)
   {
-    RCLCPP_DEBUG_STREAM(globalNh_->get_logger(), "- " << en.first);
+    if (globalNh_ != nullptr) RCLCPP_DEBUG_STREAM(globalNh_->get_logger(), "- " << en.first);
   }
 
   typeInfoDatabase[originalinputtext] = roottype;
+
+  if (roottype == nullptr && globalNh_ != nullptr)
+  {
+    std::stringstream ss;
+    ss << "---------------" << std::endl;
+    ss << "TYPE STRING WALKER, type was not properly interpreted: " << std::endl
+       << " - " << inputtext.c_str() << std::endl
+       << " - " << originalinputtext << std::endl;
+
+    ss << "---- current type (ordered types)" << std::endl;
+
+    for (auto & en : orderedTypedict)
+    {
+      ss << "- " << en.first << ": " << en.second << std::endl;
+    }
+    ss << "---------------" << std::endl;
+
+    ss << "------current type types --------" << std::endl;
+
+    for (auto & t : types)
+    {
+      ss << t->finaltype << std::endl;
+    }
+
+    ss << "----total typeinfo database" << std::endl;
+
+    for (auto & en : typeInfoDatabase)
+    {
+      ss << "- " << en.first << ": " << en.second << std::endl;
+    }
+
+    auto strmsg = ss.str();
+    RCLCPP_WARN_STREAM(globalNh_->get_logger(), strmsg);
+  }
+
   return roottype;
 }
 
