@@ -1,0 +1,22 @@
+ros-rolling-smacc2 (0.4.0-1bullseye) bullseye; urgency=high
+
+  * Feature/fixing type string walker (#263 <https://github.com/StoglRobotics-forks/SMACC2/issues/263>)
+  * Feature/fixing husky build rolling (#258 <https://github.com/StoglRobotics-forks/SMACC2/issues/258>)
+  * Merging code from backport foxy and updates about autoware (#208 <https://github.com/StoglRobotics-forks/SMACC2/issues/208>)
+  * wharehouse2 progress (#179 <https://github.com/StoglRobotics-forks/SMACC2/issues/179>)
+  * Feature/aws navigation sm dance bot (#174 <https://github.com/StoglRobotics-forks/SMACC2/issues/174>)
+  * Feature/sm dance bot strikes back refactoring (#152 <https://github.com/StoglRobotics-forks/SMACC2/issues/152>)
+  * Feature/cb pause slam (#98 <https://github.com/StoglRobotics-forks/SMACC2/issues/98>)
+  * Merge branch 'renameTracingEvents' of https://github.com/DecDury/SMACC2 into DecDury-renameTracingEvents
+  * Contributors: David Revay, DecDury, Denis Štogl, Pablo Iñigo Blasco, pabloinigoblasco, reelrbtx
+
+ -- Pablo Inigo Blasco <pablo@robosoft.ai>  Sun, 03 Apr 2022 22:00:00 -0000
+
+ros-rolling-smacc2 (0.1.0-1bullseye) bullseye; urgency=high
+
+  * Initial release of SMACC2 core
+  * Contributors: Brett Aldrich, Pablo Inigo Blasco, Denis Štogl
+
+ -- Pablo Inigo Blasco <pablo@robosoft.ai>  Mon, 30 Aug 2021 22:00:00 -0000
+
+
