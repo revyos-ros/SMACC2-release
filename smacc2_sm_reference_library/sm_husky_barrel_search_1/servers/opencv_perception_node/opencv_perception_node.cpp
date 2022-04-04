@@ -19,13 +19,7 @@
  ******************************************************************************************************************/
 
 // #include <cv_bridge/cv_bridge.h>
-
-#ifdef ROS_ROLLING
 #include <image_tools/cv_mat_sensor_msgs_image_type_adapter.hpp>
-#else
-#include "cv_mat_sensor_msgs_image_type_adapter.hpp"
-
-#endif
 #include <rclcpp/rclcpp.hpp>
 
 #include <sensor_msgs/msg/image.hpp>
@@ -34,6 +28,8 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d.hpp>
+
+#include "image_tools/cv_mat_sensor_msgs_image_type_adapter.hpp"
 
 RCLCPP_USING_CUSTOM_TYPE_AS_ROS_MESSAGE_TYPE(
   image_tools::ROSCvMatContainer,

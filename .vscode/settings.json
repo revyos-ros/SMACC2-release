@@ -2,13 +2,6 @@
     "ros.distro": "galactic",
 
     "files.associations": {
-        "iosfwd": "cpp",
-        "string": "cpp",
-        "tp_call.h": "c",
-        "random": "cpp",
-        "typeindex": "cpp",
-        "typeinfo": "cpp",
-        "variant": "cpp",
         "cctype": "cpp",
         "clocale": "cpp",
         "cmath": "cpp",
@@ -47,7 +40,6 @@
         "optional": "cpp",
         "random": "cpp",
         "ratio": "cpp",
-        "regex": "cpp",
         "set": "cpp",
         "string": "cpp",
         "string_view": "cpp",
@@ -78,7 +70,12 @@
         "variant": "cpp",
         "shared_mutex": "cpp",
         "bit": "cpp",
-        "forward_list": "cpp"
+        "forward_list": "cpp",
+        "any": "cpp",
+        "hash_map": "cpp",
+        "hash_set": "cpp",
+        "regex": "cpp",
+        "valarray": "cpp"
     },
     "python.autoComplete.extraPaths": [
         "/opt/ros/galactic/lib/python3.8/site-packages"
