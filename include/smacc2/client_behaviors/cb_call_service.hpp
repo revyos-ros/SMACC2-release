@@ -18,26 +18,49 @@
  *
  ******************************************************************************************************************/
 #pragma once
+#include <smacc2/impl/smacc_asynchronous_client_behavior_impl.hpp>
 #include <smacc2/smacc_client_behavior.hpp>
 
 namespace smacc2
 {
 namespace client_behaviors
 {
-template <typename TMsg>
-class CbSubscriptionCallbackBase : public smacc2::SmaccClientBehavior
+template <typename ServiceType>
+class CbServiceCall : public smacc2::SmaccAsyncClientBehavior
 {
 public:
-  void onEntry() override
+  CbServiceCall(const char * serviceName) : serviceName_(serviceName) {}
+
+  CbServiceCall(const char * serviceName, std::shared_ptr<typename ServiceType::Request>)
+  : serviceName_(serviceName)
   {
-    this->requiresClient(attachedClient_);
-    attachedClient_->onMessageReceived(&CbSubscriptionCallbackBase::onMessageReceived, this);
   }
 
-  virtual void onMessageReceived(const TMsg & msg) = 0;
+  void onEntry() override
+  {
+    RCLCPP_INFO_STREAM(
+      getLogger(), "[" << this->getName() << "] creating service client: " << serviceName_);
+
+    client_ = getNode()->create_client<ServiceType>(serviceName_);
+
+    result_ = client_->async_send_request(request_).get();
+
+    //, std::bind(&CbServiceCall<ServiceType>::onServiceResponse, this, std::placeholders::_1));
+  }
+
+  typename std::shared_ptr<typename ServiceType::Response> result_;
 
 protected:
-  smacc2::client_bases::SmaccSubscriberClient<TMsg> * attachedClient_ = nullptr;
+  //rclcpp::NodeHandle nh_;
+  std::shared_ptr<rclcpp::Client<ServiceType>> client_;
+  std::string serviceName_;
+  std::shared_ptr<typename ServiceType::Request> request_;
+
+  void onServiceResponse(typename rclcpp::Client<ServiceType>::SharedFuture result)
+  {
+    result_ = result;
+  }
 };
+
 }  // namespace client_behaviors
 }  // namespace smacc2
