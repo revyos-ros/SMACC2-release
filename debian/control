@@ -1,0 +1,12 @@
+Source: ros-rolling-smacc2
+Section: misc
+Priority: optional
+Maintainer: Pablo Inigo Blasco <pablo@robosoft.ai>
+Build-Depends: debhelper (>= 9.0.0), libboost-thread-dev, liblttng-ust-dev, ros-rolling-ament-cmake, ros-rolling-rcl, ros-rolling-rclcpp, ros-rolling-rclcpp-action, ros-rolling-smacc2-msgs, ros-rolling-tracetools, ros-rolling-tracetools-launch, ros-rolling-tracetools-trace, ros-rolling-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-rolling-smacc2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libboost-thread1.74.0, liblttng-ust-dev, ros-rolling-rcl, ros-rolling-rclcpp, ros-rolling-rclcpp-action, ros-rolling-smacc2-msgs, ros-rolling-tracetools, ros-rolling-tracetools-launch, ros-rolling-tracetools-trace, ros-rolling-ros-workspace
+Description: An Event-Driven, Asynchronous, Behavioral State Machine Library for ROS2 (Robotic Operating System) applications written in C++.
