@@ -18,36 +18,46 @@
  *
  ******************************************************************************************************************/
 
-#pragma once
-
-#include <smacc2/client_bases/smacc_action_client_base.hpp>
-#include <smacc2/smacc_asynchronous_client_behavior.hpp>
+#include <smacc2/client_behaviors/cb_wait_node.hpp>
 
 namespace smacc2
 {
 namespace client_behaviors
 {
-using namespace smacc2::client_bases;
+CbWaitNode::CbWaitNode(std::string nodeName) : nodeName_(nodeName), rate_(5) {}
 
-// waits the action server is available in the current orthogonal
-class CbWaitActionServer : public smacc2::SmaccAsyncClientBehavior
+void CbWaitNode::onEntry()
 {
-public:
-  CbWaitActionServer(std::chrono::milliseconds timeout);
-  virtual ~CbWaitActionServer();
-
-  template <typename TOrthogonal, typename TSourceObject>
-  void onOrthogonalAllocation()
+  bool found = false;
+  while (!this->isShutdownRequested() && !found)
   {
-    SmaccAsyncClientBehavior::onOrthogonalAllocation<TOrthogonal, TSourceObject>();
-    this->requiresClient(client_);
+    std::stringstream ss;
+    auto nodenames = getNode()->get_node_names();
+    for (auto n : nodenames)
+    {
+      ss << " - " << n << std::endl;
+
+      if (n == nodeName_) found = true;
+    }
+
+    auto totalstr = ss.str();
+    RCLCPP_INFO_STREAM(
+      getLogger(), "[" << getName() << "] on entry, listing nodes (" << nodenames.size() << ")"
+                       << std::endl
+                       << totalstr);
+
+    rate_.sleep();
   }
 
-  void onEntry() override;
+  if (found)
+  {
+    this->postSuccessEvent();
+  }
+  else
+  {
+    this->postFailureEvent();
+  }
+}
 
-private:
-  ISmaccActionClient * client_;
-  std::chrono::milliseconds timeout_;
-};
 }  // namespace client_behaviors
 }  // namespace smacc2
