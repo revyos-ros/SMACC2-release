@@ -17,6 +17,7 @@
  * 	 Authors: Pablo Inigo Blasco, Brett Aldrich
  *
  ******************************************************************************************************************/
+
 #include <smacc2/component.hpp>
 #include <smacc2/impl/smacc_component_impl.hpp>
 namespace smacc2
@@ -38,13 +39,15 @@ void ISmaccComponent::setStateMachine(ISmaccStateMachine * stateMachine)
   stateMachine_ = stateMachine;
 }
 
-rclcpp::Node::SharedPtr ISmaccComponent::getNode() { return this->owner_->getNode(); }
+rclcpp::Node::SharedPtr ISmaccComponent::getNode() { return owner_->getNode(); }
 
-rclcpp::Logger ISmaccComponent::getLogger() { return getLogger(); }
+rclcpp::Logger ISmaccComponent::getLogger() { return owner_->getLogger(); }
 
 std::string ISmaccComponent::getName() const
 {
   std::string keyname = demangleSymbol(typeid(*this).name());
   return keyname;
 }
+
+ISmaccStateMachine * ISmaccComponent::getStateMachine() { return this->stateMachine_; }
 }  // namespace smacc2
