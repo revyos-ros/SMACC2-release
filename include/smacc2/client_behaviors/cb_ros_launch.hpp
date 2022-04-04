@@ -17,37 +17,39 @@
  * 	 Authors: Pablo Inigo Blasco, Brett Aldrich
  *
  ******************************************************************************************************************/
-
 #pragma once
 
-#include <smacc2/client_bases/smacc_action_client_base.hpp>
+#include <smacc2/client_bases/smacc_ros_launch_client.hpp>
 #include <smacc2/smacc_asynchronous_client_behavior.hpp>
 
 namespace smacc2
 {
 namespace client_behaviors
 {
-using namespace smacc2::client_bases;
-
-// waits the action server is available in the current orthogonal
-class CbWaitActionServer : public smacc2::SmaccAsyncClientBehavior
+class CbRosLaunch : public smacc2::SmaccAsyncClientBehavior
 {
 public:
-  CbWaitActionServer(std::chrono::milliseconds timeout);
-  virtual ~CbWaitActionServer();
+  CbRosLaunch();
+
+  // CbRosLaunch(std::string packageName, std::string launchFileName);
+
+  virtual ~CbRosLaunch();
 
   template <typename TOrthogonal, typename TSourceObject>
   void onOrthogonalAllocation()
   {
-    SmaccAsyncClientBehavior::onOrthogonalAllocation<TOrthogonal, TSourceObject>();
-    this->requiresClient(client_);
+    smacc2::SmaccAsyncClientBehavior::onOrthogonalAllocation<TOrthogonal, TSourceObject>();
   }
 
   void onEntry() override;
 
-private:
-  ISmaccActionClient * client_;
-  std::chrono::milliseconds timeout_;
+  std::optional<std::string> packageName_;
+  std::optional<std::string> launchFileName_;
+
+protected:
+  std::string result_;
+
+  smacc2::client_bases::ClRosLaunch * client_;
 };
 }  // namespace client_behaviors
 }  // namespace smacc2
