@@ -160,7 +160,9 @@ template <typename T>
 typename enable_if<boost::mpl::is_sequence<T>>::type processTransitions(
   std::shared_ptr<SmaccStateInfo> & sourceState)
 {
-  RCLCPP_INFO_STREAM(globalNh_->get_logger(), "State %s Walker has transition list");
+  RCLCPP_INFO(
+    globalNh_->get_logger(), "State %s Walker has transition list",
+    sourceState->fullStateName.c_str());
   using boost::mpl::_1;
   using wrappedList = typename boost::mpl::transform<T, add_type_wrapper<_1>>::type;
   boost::mpl::for_each<wrappedList>(AddTransition(sourceState));
@@ -182,6 +184,9 @@ void processTransition(
   smacc2::Transition<Ev, Dst, Tag> * t, std::shared_ptr<SmaccStateInfo> & sourceState)
 {
   auto transitionTypeInfo = TypeInfo::getTypeInfoFromType<smacc2::Transition<Ev, Dst, Tag>>();
+  RCLCPP_INFO(
+    globalNh_->get_logger(), "State %s Walker transition: %s", sourceState->toShortName().c_str(),
+    demangleSymbol(typeid(Ev).name()).c_str());
   processTransitionAux(t, sourceState, false, transitionTypeInfo);
 }
 
@@ -504,8 +509,7 @@ std::shared_ptr<SmaccStateInfo> SmaccStateInfo::createChildState()
   auto childState = this->stateMachine_->createState<StateType>(realparentState);
 
   RCLCPP_WARN_STREAM(
-    getNode()->get_logger(),
-    "Real parent state> " << demangleSymbol<typename StateType::TContext>());
+    getLogger(), "Real parent state> " << demangleSymbol<typename StateType::TContext>());
 
   /*auto contextInfo = TypeInfo::getTypeInfoFromType<InitialStateType>();
     auto parentState2= getState<InitialStateType::TContext>();
