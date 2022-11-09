@@ -32,7 +32,8 @@ public:
   template <typename TOrthogonal, typename TSourceObject>
   void onOrthogonalAllocation()
   {
-    postEventKeyPress = [=](char character) {
+    postEventKeyPress = [=](char character)
+    {
       if (character == 'a')
         postKeyEvent<EvKeyPressA<CbDefaultKeyboardBehavior, TOrthogonal>>();
       else if (character == 'b')
@@ -49,7 +50,7 @@ public:
         postKeyEvent<EvKeyPressG<CbDefaultKeyboardBehavior, TOrthogonal>>();
       else if (character == 'h')
         postKeyEvent<EvKeyPressH<CbDefaultKeyboardBehavior, TOrthogonal>>();
-      else if (character == 'y')
+      else if (character == 'i')
         postKeyEvent<EvKeyPressI<CbDefaultKeyboardBehavior, TOrthogonal>>();
       else if (character == 'j')
         postKeyEvent<EvKeyPressJ<CbDefaultKeyboardBehavior, TOrthogonal>>();

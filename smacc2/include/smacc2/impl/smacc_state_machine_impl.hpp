@@ -93,7 +93,8 @@ template <typename TOrthogonal>
 void ISmaccStateMachine::createOrthogonal()
 {
   //this->lockStateMachine("create orthogonal");
-  std::lock_guard<std::recursive_mutex> guard();
+  std::lock_guard<std::recursive_mutex> guard(m_mutex_);
+
   std::string orthogonalkey = demangledTypeName<TOrthogonal>();
 
   if (orthogonals_.count(orthogonalkey) == 0)
@@ -123,7 +124,7 @@ void ISmaccStateMachine::createOrthogonal()
 
 //-------------------------------------------------------------------------------------------------------
 template <typename SmaccComponentType>
-void ISmaccStateMachine::requiresComponent(SmaccComponentType *& storage)
+void ISmaccStateMachine::requiresComponent(SmaccComponentType *& storage, bool throwsException)
 {
   RCLCPP_DEBUG(
     getLogger(), "component %s is required",
@@ -145,6 +146,9 @@ void ISmaccStateMachine::requiresComponent(SmaccComponentType *& storage)
   RCLCPP_WARN(
     getLogger(), "component %s is required but it was not found in any orthogonal",
     demangleSymbol(typeid(SmaccComponentType).name()).c_str());
+
+  if (throwsException)
+    throw std::runtime_error("component is required but it was not found in any orthogonal");
 
   // std::string componentkey = demangledTypeName<SmaccComponentType>();
   // SmaccComponentType *ret;
@@ -261,7 +265,8 @@ void ISmaccStateMachine::setGlobalSMData(std::string name, T value)
     // RCLCPP_WARN(getLogger(),"set SM Data lock acquire");
 
     globalData_[name] = {
-      [this, name]() {
+      [this, name]()
+      {
         std::stringstream ss;
         auto val = any_cast<T>(globalData_[name].second);
         ss << val;
@@ -344,8 +349,8 @@ struct Bind<4>
   boost::signals2::connection bindaux(
     TSmaccSignal & signal, TMemberFunctionPrototype callback, TSmaccObjectType * object)
   {
-    return signal.connect(
-      [=](auto a1, auto a2, auto a3) { return (object->*callback)(a1, a2, a3); });
+    return signal.connect([=](auto a1, auto a2, auto a3)
+                          { return (object->*callback)(a1, a2, a3); });
   }
 };
 }  // namespace utils
@@ -475,7 +480,7 @@ void ISmaccStateMachine::notifyOnStateEntryEnd(StateType *)
   }
 
   this->updateStatusMessage();
-  stateMachineCurrentAction = StateMachineInternalAction::STATE_STEADY;
+  stateMachineCurrentAction = StateMachineInternalAction::STATE_RUNNING;
 }
 
 template <typename StateType>

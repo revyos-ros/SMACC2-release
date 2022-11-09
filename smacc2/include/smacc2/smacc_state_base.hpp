@@ -179,31 +179,37 @@ public:
   static void configure_orthogonal_runtime(
     std::function<void(TBehavior & bh, MostDerived &)> initializationFunction)
   {
-    configure_orthogonal_internal<TOrthogonal, TBehavior>([=](ISmaccState * state) {
-      // auto bh = std::make_shared<TBehavior>(args...);
-      auto bh = state->configure<TOrthogonal, TBehavior>();
-      initializationFunction(*bh, *(static_cast<MostDerived *>(state)));
-    });
+    configure_orthogonal_internal<TOrthogonal, TBehavior>(
+      [=](ISmaccState * state)
+      {
+        // auto bh = std::make_shared<TBehavior>(args...);
+        auto bh = state->configure<TOrthogonal, TBehavior>();
+        initializationFunction(*bh, *(static_cast<MostDerived *>(state)));
+      });
   }
 
   template <typename TOrthogonal, typename TBehavior>
   static void configure_orthogonal_runtime(
     std::function<void(TBehavior & bh)> initializationFunction)
   {
-    configure_orthogonal_internal<TOrthogonal, TBehavior>([=](ISmaccState * state) {
-      // auto bh = std::make_shared<TBehavior>(args...);
-      auto bh = state->configure<TOrthogonal, TBehavior>();
-      initializationFunction(*bh);
-    });
+    configure_orthogonal_internal<TOrthogonal, TBehavior>(
+      [=](ISmaccState * state)
+      {
+        // auto bh = std::make_shared<TBehavior>(args...);
+        auto bh = state->configure<TOrthogonal, TBehavior>();
+        initializationFunction(*bh);
+      });
   }
 
   template <typename TOrthogonal, typename TBehavior, typename... Args>
   static void configure_orthogonal(Args &&... args)
   {
-    configure_orthogonal_internal<TOrthogonal, TBehavior>([=](ISmaccState * state) {
-      // auto bh = std::make_shared<TBehavior>(args...);
-      state->configure<TOrthogonal, TBehavior>(args...);
-    });
+    configure_orthogonal_internal<TOrthogonal, TBehavior>(
+      [=](ISmaccState * state)
+      {
+        // auto bh = std::make_shared<TBehavior>(args...);
+        state->configure<TOrthogonal, TBehavior>(args...);
+      });
   }
 
   template <
@@ -247,7 +253,8 @@ public:
       SmaccStateInfo::stateReactorsInfo[tindex] =
         std::vector<std::shared_ptr<SmaccStateReactorInfo>>();
 
-    srinfo->factoryFunction = [&, srh, args...](ISmaccState * state) {
+    srinfo->factoryFunction = [&, srh, args...](ISmaccState * state)
+    {
       auto sr =
         state->createStateReactor<TStateReactor, TOutputEvent, TInputEventList, TArgs...>(args...);
       srh->configureStateReactor(sr);
@@ -277,7 +284,8 @@ public:
       SmaccStateInfo::eventGeneratorsInfo[tindex] =
         std::vector<std::shared_ptr<SmaccEventGeneratorInfo>>();
 
-    eginfo->factoryFunction = [&, egh, args...](ISmaccState * state) {
+    eginfo->factoryFunction = [&, egh, args...](ISmaccState * state)
+    {
       auto eg = state->createEventGenerator<TEventGenerator>(args...);
       egh->configureEventGenerator(eg);
       eg->initialize(state);
@@ -306,7 +314,8 @@ public:
       SmaccStateInfo::stateReactorsInfo[tindex] =
         std::vector<std::shared_ptr<SmaccStateReactorInfo>>();
 
-    srinfo->factoryFunction = [&, srh, args...](ISmaccState * state) {
+    srinfo->factoryFunction = [&, srh, args...](ISmaccState * state)
+    {
       auto sr = state->createStateReactor<TStateReactor>(args...);
       srh->configureStateReactor(sr);
       sr->initialize(state);
@@ -405,27 +414,27 @@ private:
   {
     // finally we go to the derived state onEntry Function
 
-    RCLCPP_INFO(getLogger(), "[%s] State object created. Initializating...", STATE_NAME);
+    RCLCPP_DEBUG(getLogger(), "[%s] State object created. Initializating...", STATE_NAME);
     this->getStateMachine().notifyOnStateEntryStart(static_cast<MostDerived *>(this));
 
-    RCLCPP_INFO_STREAM(
+    RCLCPP_DEBUG_STREAM(
       getLogger(), "[" << smacc2::utils::cleanShortTypeName(typeid(MostDerived)).c_str()
                        << "] creating ros subnode");
 
     // before dynamic runtimeConfigure, we execute the staticConfigure behavior configurations
     {
-      RCLCPP_INFO(getLogger(), "[%s] -- STATIC STATE DESCRIPTION --", STATE_NAME);
+      RCLCPP_DEBUG(getLogger(), "[%s] -- STATIC STATE DESCRIPTION --", STATE_NAME);
 
-      for (const auto & stateReactorsVector : SmaccStateInfo::staticBehaviorInfo)
+      for (const auto & clientBehavior : SmaccStateInfo::staticBehaviorInfo)
       {
         RCLCPP_DEBUG(
-          getLogger(), "[%s] state reactor info: %s", STATE_NAME,
-          demangleSymbol(stateReactorsVector.first->name()).c_str());
-        for (auto & srinfo : stateReactorsVector.second)
+          getLogger(), "[%s] client behavior info: %s", STATE_NAME,
+          demangleSymbol(clientBehavior.first->name()).c_str());
+        for (auto & cbinfo : clientBehavior.second)
         {
           RCLCPP_DEBUG(
-            getLogger(), "[%s] state reactor: %s", STATE_NAME,
-            demangleSymbol(srinfo.behaviorType->name()).c_str());
+            getLogger(), "[%s] client behavior: %s", STATE_NAME,
+            demangleSymbol(cbinfo.behaviorType->name()).c_str());
         }
       }
 
@@ -441,7 +450,7 @@ private:
                        << " cbs: " << SmaccStateInfo::staticBehaviorInfo[tindex].size());
       for (auto & bhinfo : staticDefinedBehaviors)
       {
-        RCLCPP_INFO(
+        RCLCPP_DEBUG(
           getLogger(), "[%s] Creating static client behavior: %s", STATE_NAME,
           demangleSymbol(bhinfo.behaviorType->name()).c_str());
         bhinfo.factoryFunction(this);
@@ -449,7 +458,7 @@ private:
 
       for (auto & sr : staticDefinedStateReactors)
       {
-        RCLCPP_INFO(
+        RCLCPP_DEBUG(
           getLogger(), "[%s] Creating static state reactor: %s", STATE_NAME,
           sr->stateReactorType->getFullName().c_str());
         sr->factoryFunction(this);
@@ -457,16 +466,16 @@ private:
 
       for (auto & eg : staticDefinedEventGenerators)
       {
-        RCLCPP_INFO(
+        RCLCPP_DEBUG(
           getLogger(), "[%s] Creating static event generator: %s", STATE_NAME,
           eg->eventGeneratorType->getFullName().c_str());
         eg->factoryFunction(this);
       }
 
-      RCLCPP_INFO(getLogger(), "[%s] ---- END STATIC DESCRIPTION", STATE_NAME);
+      RCLCPP_DEBUG(getLogger(), "[%s] ---- END STATIC DESCRIPTION", STATE_NAME);
     }
 
-    RCLCPP_INFO(getLogger(), "[%s] State runtime configuration", STATE_NAME);
+    RCLCPP_DEBUG(getLogger(), "[%s] State runtime configuration", STATE_NAME);
 
     auto * derivedthis = static_cast<MostDerived *>(this);
 
@@ -480,7 +489,7 @@ private:
 
     this->getStateMachine().notifyOnRuntimeConfigurationFinished(derivedthis);
 
-    RCLCPP_INFO(getLogger(), "[%s] State OnEntry", STATE_NAME);
+    RCLCPP_DEBUG(getLogger(), "[%s] State OnEntry", STATE_NAME);
 
     static_cast<MostDerived *>(this)->onEntry();
 
