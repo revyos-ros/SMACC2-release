@@ -1,0 +1,12 @@
+Source: ros-humble-sm-pubsub-1
+Section: misc
+Priority: optional
+Maintainer: Pablo Iñigo Blasco <pablo@ibrobotics.com>
+Build-Depends: debhelper (>= 9.0.0), ros-humble-ament-cmake, ros-humble-eg-conditional-generator, ros-humble-keyboard-client, ros-humble-smacc2, ros-humble-std-msgs, ros-humble-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-humble-sm-pubsub-1
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-humble-eg-conditional-generator, ros-humble-keyboard-client, ros-humble-smacc2, ros-humble-std-msgs, xterm, ros-humble-ros-workspace
+Description: The sm_pubsub_1 package
