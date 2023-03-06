@@ -19,7 +19,6 @@ find_package(nav_msgs)
 find_package(rclcpp)
 find_package(tf2)
 find_package(tf2_geometry_msgs)
-find_package(rclcpp_lifecycle)
 
 set(dependencies
   angles
@@ -28,7 +27,6 @@ set(dependencies
   rclcpp
   tf2
   tf2_geometry_msgs
-  rclcpp_lifecycle
 )
 
 include_directories(include)

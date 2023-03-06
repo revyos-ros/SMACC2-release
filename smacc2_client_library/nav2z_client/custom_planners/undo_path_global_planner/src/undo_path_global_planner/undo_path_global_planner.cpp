@@ -26,10 +26,10 @@
 #include <boost/range/algorithm/copy.hpp>
 #include <geometry_msgs/msg/quaternion.hpp>
 
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <nav2z_planners_common/common.hpp>
 #include <nav_2d_utils/tf_help.hpp>
 #include <pluginlib/class_list_macros.hpp>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #include <undo_path_global_planner/undo_path_global_planner.hpp>
 
 // register this planner as a BaseGlobalPlanner plugin
@@ -97,10 +97,9 @@ void UndoPathGlobalPlanner::configure(
     "odom_tracker_path", qos,
     std::bind(&UndoPathGlobalPlanner::onForwardTrailMsg, this, std::placeholders::_1));
 
-  planPub_ =
-    nh_->create_publisher<nav_msgs::msg::Path>("undo_path_planner/global_plan", rclcpp::QoS(1));
-  markersPub_ = nh_->create_publisher<visualization_msgs::msg::MarkerArray>(
-    "undo_path_planner/markers", rclcpp::QoS(1));
+  planPub_ = nh_->create_publisher<nav_msgs::msg::Path>("undo_path_planner/global_plan", 1);
+  markersPub_ =
+    nh_->create_publisher<visualization_msgs::msg::MarkerArray>("undo_path_planner/markers", 1);
 
   declareOrSet(nh_, name_ + ".transform_tolerance", transform_tolerance_);
 }
@@ -439,7 +438,7 @@ nav_msgs::msg::Path UndoPathGlobalPlanner::createPlan(
   auto costmap2d = this->costmap_ros_->getCostmap();
   for (auto & p : plan)
   {
-    unsigned int mx, my;
+    uint32_t mx, my;
     costmap2d->worldToMap(p.pose.position.x, p.pose.position.y, mx, my);
     auto cost = costmap2d->getCost(mx, my);
 

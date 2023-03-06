@@ -22,7 +22,7 @@ namespace cl_ros_timer
 class CbTimerCountdownOnce : public smacc2::SmaccClientBehavior
 {
 public:
-  CbTimerCountdownOnce(unsigned long triggerTickCount);
+  CbTimerCountdownOnce(uint64_t triggerTickCount);
 
   void onEntry() override;
   void onExit() override;
@@ -30,8 +30,9 @@ public:
   template <typename TOrthogonal, typename TSourceObject>
   void onOrthogonalAllocation()
   {
-    this->postCountDownEvent_ = [=]()
-    { this->template postEvent<EvTimer<TSourceObject, TOrthogonal>>(); };
+    this->postCountDownEvent_ = [=]() {
+      this->template postEvent<EvTimer<TSourceObject, TOrthogonal>>();
+    };
   }
 
   template <typename T>
@@ -41,8 +42,8 @@ public:
   }
 
 private:
-  unsigned long tickCounter_;
-  unsigned long tickTriggerCount_;
+  uint64_t tickCounter_;
+  uint64_t tickTriggerCount_;
 
   ClRosTimer * timerClient_;
   std::function<void()> postCountDownEvent_;

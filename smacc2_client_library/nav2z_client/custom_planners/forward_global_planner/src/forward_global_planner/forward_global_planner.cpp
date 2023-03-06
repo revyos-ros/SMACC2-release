@@ -59,7 +59,7 @@ void ForwardGlobalPlanner::configure(
   costmap_ros_ = costmap_ros;
 
   RCLCPP_INFO(nh_->get_logger(), "[Forward Global Planner] initializing");
-  planPub_ = nh_->create_publisher<nav_msgs::msg::Path>("global_plan", rclcpp::QoS(1));
+  planPub_ = nh_->create_publisher<nav_msgs::msg::Path>("global_plan", 1);
   skip_straight_motion_distance_ = 0.2;  // meters
   puresSpinningRadStep_ = 1000;          // rads
   transform_tolerance_ = 0.1;
@@ -141,7 +141,7 @@ nav_msgs::msg::Path ForwardGlobalPlanner::createPlan(
   nav2_costmap_2d::Costmap2D * costmap2d = this->costmap_ros_->getCostmap();
   for (auto & p : plan)
   {
-    unsigned int mx, my;
+    uint32_t mx, my;
     costmap2d->worldToMap(p.pose.position.x, p.pose.position.y, mx, my);
     auto cost = costmap2d->getCost(mx, my);
 

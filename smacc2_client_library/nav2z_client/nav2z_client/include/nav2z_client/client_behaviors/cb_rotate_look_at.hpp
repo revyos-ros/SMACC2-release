@@ -23,7 +23,7 @@
 
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include "cb_absolute_rotate.hpp"
-#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 
 namespace cl_nav2z
 {
