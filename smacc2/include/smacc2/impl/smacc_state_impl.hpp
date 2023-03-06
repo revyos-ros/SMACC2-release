@@ -32,8 +32,6 @@
 namespace smacc2
 {
 using namespace smacc2::introspection;
-
-//-------------------------------------------------------------------------------------------------------
 #define THIS_STATE_NAME ((demangleSymbol(typeid(*this).name()).c_str()))
 template <typename TOrthogonal, typename TBehavior, typename... Args>
 std::shared_ptr<TBehavior> ISmaccState::configure(Args &&... args)
@@ -45,8 +43,9 @@ std::shared_ptr<TBehavior> ISmaccState::configure(Args &&... args)
   TOrthogonal * orthogonal = this->getOrthogonal<TOrthogonal>();
   if (orthogonal != nullptr)
   {
-    auto clientBehavior = std::shared_ptr<TBehavior>(new TBehavior(args...));
-    clientBehavior->currentState = this;
+    auto clientBehavior =
+      std::shared_ptr<TBehavior>(new TBehavior(args...));  // is there an error here? are the
+                                                           // behavior constructor parameters right?
     orthogonal->addClientBehavior(clientBehavior);
     clientBehavior->template onOrthogonalAllocation<TOrthogonal, TBehavior>();
     return clientBehavior;
@@ -107,8 +106,8 @@ template <typename TStateReactor, typename... TEvArgs>
 std::shared_ptr<TStateReactor> ISmaccState::createStateReactor(TEvArgs... args)
 {
   auto sr = std::make_shared<TStateReactor>(args...);
-  //sb->initialize(this, mock);
-  //sb->setOutputEvent(typelist<TTriggerEvent>());
+  // sb->initialize(this, mock);
+  // sb->setOutputEvent(typelist<TTriggerEvent>());
   stateReactors_.push_back(sr);
   return sr;
 }
@@ -172,6 +171,12 @@ template <typename TOrthogonal>
 TOrthogonal * ISmaccState::getOrthogonal()
 {
   return this->getStateMachine().getOrthogonal<TOrthogonal>();
+}
+
+template <typename TOrthogonal, typename TClientBehavior>
+TClientBehavior * ISmaccState::getClientBehavior(int index)
+{
+  return this->getStateMachine().getClientBehavior<TOrthogonal, TClientBehavior>(index);
 }
 
 template <typename TEventGenerator>

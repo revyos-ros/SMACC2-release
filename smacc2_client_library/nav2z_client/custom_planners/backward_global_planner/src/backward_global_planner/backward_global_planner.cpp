@@ -267,7 +267,7 @@ nav_msgs::msg::Path BackwardGlobalPlanner::createPlan(
   auto costmap2d = this->costmap_ros_->getCostmap();
   for (auto & p : plan)
   {
-    unsigned int mx, my;
+    uint32_t mx, my;
     costmap2d->worldToMap(p.pose.position.x, p.pose.position.y, mx, my);
     auto cost = costmap2d->getCost(mx, my);
 
@@ -277,7 +277,12 @@ nav_msgs::msg::Path BackwardGlobalPlanner::createPlan(
     // static const unsigned char FREE_SPACE = 0;
     if (cost >= nav2_costmap_2d::INSCRIBED_INFLATED_OBSTACLE)
     {
-      acceptedGlobalPlan = false;
+      RCLCPP_WARN_STREAM(
+        nh_->get_logger(),
+        "[BackwardGlobalPlanner] backwards plan is rejected because interscts the obstacle "
+        "inscribed inflated obstacle"
+          << " at: " << p.pose.position.x << " " << p.pose.position.y);
+
       break;
     }
   }
