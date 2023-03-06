@@ -20,10 +20,8 @@
 
 #pragma once
 
-#include <sm_husky_barrel_search_1/clients/led_array/cl_led_array.hpp>
-#include <smacc2/client_base_components/cp_topic_publisher.hpp>
 #include <smacc2/smacc_orthogonal.hpp>
-#include <std_msgs/msg/int8.hpp>
+#include <sm_husky_barrel_search_1/clients/led_array/cl_led_array.hpp>
 
 namespace sm_husky_barrel_search_1
 {
@@ -37,13 +35,13 @@ public:
     auto client = this->createClient<cl_led_array::ClLedArray>();
 
     client->createNamedComponent<smacc2::components::CpTopicPublisher<std_msgs::msg::Int8>>(
-      "greenLed", "/light_model_green/cmdled");
+      "greenLed", "/led_array/light_model_green/cmdled");
 
     client->createNamedComponent<smacc2::components::CpTopicPublisher<std_msgs::msg::Int8>>(
-      "yellowLed", "/light_model_yellow/cmdled");
+      "yellowLed", "/led_array/light_model_yellow/cmdled");
 
     client->createNamedComponent<smacc2::components::CpTopicPublisher<std_msgs::msg::Int8>>(
-      "redLed", "/light_model_red/cmdled");
+      "redLed", "/led_array/light_model_red/cmdled");
   }
 };
 }  // namespace sm_husky_barrel_search_1

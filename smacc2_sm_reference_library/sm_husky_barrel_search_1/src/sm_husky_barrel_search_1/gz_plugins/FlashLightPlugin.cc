@@ -438,6 +438,8 @@ void FlashLightSetting::SwitchOn()
 //////////////////////////////////////////////////
 void FlashLightSetting::SwitchOff()
 {
+  gzmsg <<  "switch off" << std::endl;
+
   this->dataPtr->switchOn = false;
 }
 
@@ -509,7 +511,7 @@ void FlashLightSetting::SetColor(const ignition::math::Color &_color)
 }
 
 //////////////////////////////////////////////////
-unsigned int FlashLightSetting::BlockCount()
+uint64_t FlashLightSetting::BlockCount()
 {
   return this->dataPtr->blocks.size();
 }
@@ -579,7 +581,7 @@ void FlashLightSetting::Dim()
   // Send the message.
   if (this->dataPtr->lightExists)
   {
-    this->dataPtr->pubLight->Publish(this->dataPtr->msg);
+    //this->dataPtr->pubLight->Publish(this->dataPtr->msg);
   }
   // Update the state.
   this->dataPtr->flashing = false;
@@ -709,7 +711,7 @@ void FlashLightPlugin::Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr _
     [this, node]
     (const std_msgs::msg::Int8::SharedPtr msg)
     {
-      RCLCPP_INFO(node->get_logger(), "msg received");
+      RCLCPP_INFO(node->get_logger(), "msg received: %d", (int)msg->data);
       if(msg->data == 0)
       this->TurnOffAll();
       else
@@ -799,11 +801,14 @@ bool FlashLightPlugin::TurnOff(const std::string &_lightName,
 //////////////////////////////////////////////////
 bool FlashLightPlugin::TurnOffAll()
 {
+  gzmsg << "msg TurnOffAll"  << std::endl;
   if (this->dataPtr->listFlashLight.empty())
   {
     gzerr << "no flash lights exist to turn off." << std::endl;
     return false;
   }
+
+  gzmsg <<  "switch off" << std::endl;
 
   for (auto &setting: this->dataPtr->listFlashLight)
   {

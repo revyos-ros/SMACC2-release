@@ -20,23 +20,57 @@
 
 #pragma once
 
+#include <smacc2/client_base_components/cp_topic_publisher.hpp>
 #include <smacc2/client_bases/smacc_subscriber_client.hpp>
 #include <std_msgs/msg/int32.hpp>
+#include <std_msgs/msg/int8.hpp>
 
 namespace sm_husky_barrel_search_1
 {
 namespace cl_led_array
 {
+
+  enum class LedColor{GREEN, YELLOW, RED};
+
 class ClLedArray : public smacc2::ISmaccClient
 {
 public:
+  smacc2::components::CpTopicPublisher<std_msgs::msg::Int8> * greenLed_;
+  smacc2::components::CpTopicPublisher<std_msgs::msg::Int8> * yellowLed_;
+  smacc2::components::CpTopicPublisher<std_msgs::msg::Int8> * redLed_;
 
-  ClLedArray()
+  std::map <LedColor, smacc2::components::CpTopicPublisher<std_msgs::msg::Int8> *> ledComponentByKey_;
+
+  ClLedArray() {}
+
+  virtual ~ClLedArray() {}
+
+  void onInitialize() override
   {
+    greenLed_ =
+      getComponent<smacc2::components::CpTopicPublisher<std_msgs::msg::Int8>>("greenLed");
+    yellowLed_ =
+      getComponent<smacc2::components::CpTopicPublisher<std_msgs::msg::Int8>>("yellowLed");
+    redLed_ = getComponent<smacc2::components::CpTopicPublisher<std_msgs::msg::Int8>>("redLed");
+
+    ledComponentByKey_ = {{LedColor::GREEN, greenLed_},
+                          {LedColor::YELLOW, yellowLed_},
+                          {LedColor::RED, redLed_}
+    };
   }
 
-  virtual ~ClLedArray()
+  void turnOff(LedColor color)
   {
+    std_msgs::msg::Int8 msg;
+    msg.data = 0;
+    ledComponentByKey_[color]->publish(msg);
+  }
+
+  void turnOn(LedColor color)
+  {
+    std_msgs::msg::Int8 msg;
+    msg.data = 1;
+    ledComponentByKey_[color]->publish(msg);
   }
 
   template <typename TOrthogonal, typename TSourceObject>
@@ -44,5 +78,5 @@ public:
   {
   }
 };
-}
-}
+}  // namespace cl_led_array
+}  // namespace sm_husky_barrel_search_1

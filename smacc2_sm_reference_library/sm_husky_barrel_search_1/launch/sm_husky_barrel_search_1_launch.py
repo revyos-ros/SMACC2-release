@@ -20,7 +20,7 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -40,6 +40,8 @@ def generate_launch_description():
     params_file = LaunchConfiguration("params_file")
     default_nav_to_pose_bt_xml = LaunchConfiguration("default_nav_to_pose_bt_xml")
     autostart = LaunchConfiguration("autostart")
+    debug_sm_node = LaunchConfiguration("debug_sm_node")
+
     # show_gz_lidar = LaunchConfiguration("show_gz_lidar")
 
     # Launch configuration variables specific to simulation
@@ -108,6 +110,10 @@ def generate_launch_description():
         "autostart", default_value="true", description="Automatically startup the nav2 stack"
     )
 
+    debug_sm_node_cmd = DeclareLaunchArgument(
+        "debug_sm_node", default_value="false", description="Debug sm node"
+    )
+
     declare_rviz_config_file_cmd = DeclareLaunchArgument(
         "rviz_config_file",
         default_value=os.path.join(sm_husky_barrel_search_1_dir, "rviz", "nav2_default_view.rviz"),
@@ -170,21 +176,14 @@ def generate_launch_description():
         }.items(),
     )
 
-    ekf_gps_localization = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(sm_husky_barrel_search_1_launch_dir, "ekf_gps_launch.py")
-        ),
-        launch_arguments={
-            "namespace": namespace,
-            "use_namespace": use_namespace,
-            "autostart": autostart,
-            "params_file": params_file,
-            # "slam": slam,
-            "map": map_yaml_file,
-            "use_sim_time": use_sim_time,
-            "default_nav_to_pose_bt_xml": default_nav_to_pose_bt_xml,
-        }.items(),
-    )
+    # ekf_gps_localization = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         os.path.join(sm_husky_barrel_search_1_launch_dir, "ekf_gps_launch.py")
+    #     ),
+    #     launch_arguments={
+    #         "use_sim_time": use_sim_time,
+    #     }.items(),
+    # )
 
     gazebo_simulator = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -205,6 +204,7 @@ def generate_launch_description():
     # )
 
     xtermprefix = "xterm -xrm 'XTerm*scrollBar:  true' -xrm 'xterm*rightScrollBar: true' -hold -geometry 1000x600 -sl 10000 -e"
+    # xtermprefix = "gnome-terminal --"
 
     sm_husky_barrel_search_1_node = Node(
         package="sm_husky_barrel_search_1",
@@ -212,6 +212,7 @@ def generate_launch_description():
         name="SmHuskyBarrelSearch1",
         output="screen",
         prefix=xtermprefix,
+        condition=UnlessCondition(debug_sm_node),
         parameters=[
             os.path.join(
                 get_package_share_directory("sm_husky_barrel_search_1"),
@@ -223,11 +224,63 @@ def generate_launch_description():
             ),
         ],
         remappings=[
-            # ("/odom", "/odometry/filtered"),
+            # ("/odom", "/odometry/local"),
             # ("/sm_husky_barrel_search_1_2/odom_tracker/odom_tracker_path", "/odom_tracker_path"),
             # ("/sm_husky_barrel_search_1_2/odom_tracker/odom_tracker_stacked_path", "/odom_tracker_path_stacked")
         ],
-        arguments=["--ros-args", "--log-level", "INFO"],
+        arguments=[
+            "--ros-args",
+            "--log-level",
+            "INFO",
+            "--log-level",
+            "rcl:=INFO",
+            "--log-level",
+            "rmw_cyclonedds_cpp:=INFO",
+            "--log-level",
+            "rcl_action:=INFO",
+            "--log-level",
+            "rclcpp_action:=INFO",
+        ],
+    )
+
+    static_map_transform = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        parameters=[{"use_sim_time": LaunchConfiguration("use_sim_time")}],
+        output="screen",
+        arguments=["0", "0", "0", "0", "0", "0", "map", "odom"],
+    )
+
+    static_map_transform_2 = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        parameters=[{"use_sim_time": LaunchConfiguration("use_sim_time")}],
+        output="screen",
+        arguments=["0", "0", "0", "0", "0", "0", "base_link", "base_footprint"],
+    )
+
+    odom_to_tf = Node(
+        package="sm_husky_barrel_search_1",
+        executable="odom_to_tf",
+        name="odom_to_tf",
+        output="screen",
+        prefix=xtermprefix,
+        parameters=[{"use_sim_time": use_sim_time}],
+        remappings=[
+            ("odom", "odom_gt"),
+            ("odom_out", "odom")
+            #     # ("/sm_husky_barrel_search_1_2/odom_tracker/odom_tracker_path", "/odom_tracker_path"),
+            #     # ("/sm_husky_barrel_search_1_2/odom_tracker/odom_tracker_stacked_path", "/odom_tracker_path_stacked")
+        ],
+        # arguments=["--ros-args", "--log-level", "INFO"],
+    )
+
+    opencv_perception_node = Node(
+        package="sm_husky_barrel_search_1",
+        executable="opencv_perception_node",
+        output="screen",
+        remappings=[("/image_raw", "/intel_realsense_r200_depth/image_raw")],
+        prefix=xtermprefix,
     )
 
     # led_action_server_node = Node(
@@ -265,6 +318,7 @@ def generate_launch_description():
     ld.add_action(declare_params_file_cmd)
     ld.add_action(declare_bt_xml_cmd)
     ld.add_action(declare_autostart_cmd)
+    ld.add_action(debug_sm_node_cmd)
     ld.add_action(declare_map_yaml_cmd)
     ld.add_action(declare_show_gz_lidar)
     ld.add_action(declare_headless_simulator_argument)
@@ -277,6 +331,7 @@ def generate_launch_description():
     # ld.add_action(gazebo_husky)
 
     ld.add_action(sm_husky_barrel_search_1_node)
+    ld.add_action(opencv_perception_node)
     # ld.add_action(service3_node)
     # ld.add_action(temperature_action_server)
     # ld.add_action(led_action_server_node)
@@ -285,6 +340,11 @@ def generate_launch_description():
     ld.add_action(start_robot_state_publisher_cmd)
     ld.add_action(rviz_cmd)
     ld.add_action(bringup_cmd)
-    ld.add_action(ekf_gps_localization)
+    ld.add_action(odom_to_tf)
+
+    ld.add_action(static_map_transform)
+    ld.add_action(static_map_transform_2)
+
+    # ld.add_action(ekf_gps_localization)
 
     return ld

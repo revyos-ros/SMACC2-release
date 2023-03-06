@@ -24,6 +24,7 @@
 
 #include <memory>
 #include <string>
+#include <rclcpp/rclcpp.hpp>
 
 #include <ignition/math/Color.hh>
 
@@ -31,7 +32,6 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo_ros/node.hpp>
 #include <std_msgs/msg/int8.hpp>
-#include <rclcpp/rclcpp.hpp>
 
 
 namespace smacc2
@@ -118,7 +118,7 @@ namespace smacc2
 
     /// \brief Get the number of blocks.
     /// \return The number of blocks the object currently has.
-    public: virtual unsigned int BlockCount() final;
+    public: virtual uint64_t BlockCount() final;
 
     /// \brief Remove a specified block.
     /// \param[in] _index Index to the block to remove
