@@ -1,0 +1,12 @@
+Source: ros-foxy-ros-timer-client
+Section: misc
+Priority: optional
+Maintainer: Pablo Inigo Blasco <pablo@ibrobotics.com>
+Build-Depends: debhelper (>= 9.0.0), ros-foxy-ament-cmake, ros-foxy-smacc2, ros-foxy-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-foxy-ros-timer-client
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-foxy-smacc2, ros-foxy-ros-workspace
+Description: The ros_timer_client package
