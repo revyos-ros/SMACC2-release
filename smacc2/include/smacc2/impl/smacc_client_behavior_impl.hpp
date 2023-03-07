@@ -70,8 +70,7 @@ void ISmaccClientBehavior::requiresClient(SmaccClientType *& storage)
 }
 
 template <typename SmaccComponentType>
-void ISmaccClientBehavior::requiresComponent(
-  SmaccComponentType *& storage, bool throwExceptionIfNotExist)
+void ISmaccClientBehavior::requiresComponent(SmaccComponentType *& storage)
 {
   if (stateMachine_ == nullptr)
   {
@@ -82,7 +81,7 @@ void ISmaccClientBehavior::requiresComponent(
   }
   else
   {
-    stateMachine_->requiresComponent(storage, throwExceptionIfNotExist);
+    stateMachine_->requiresComponent(storage);
   }
 }
 

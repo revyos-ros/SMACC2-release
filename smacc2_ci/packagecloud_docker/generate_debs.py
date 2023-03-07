@@ -13,8 +13,6 @@
 # limitations under the License.
 
 # /bin/python
-# Author: Pablo Iñigo Blasco
-
 
 import rospkg
 import subprocess
@@ -62,16 +60,11 @@ def build_deb_package(
 
     os.chdir(localpackagepath)
     fakerootprocess = subprocess.Popen("fakeroot debian/rules binary", shell=True)
-    (result, err) = fakerootprocess.communicate()
+    fakerootprocess.wait()
 
-    if (
-        result != 0
-        or not os.path.exist(os.path.join(localpackagepath, "obj-x86_64-linux-gnu"))
-        or not os.path.exist(os.path.join(localpackagepath, "debian"))
-    ):
-        print("----------")
-        print("FAILURE: incorrect fake root build")
-        raise Exception("incorrect fake root build")
+    os.chdir(localpackagepath)
+    shutil.rmtree("debian")
+    shutil.rmtree("obj-x86_64-linux-gnu")
 
     os.chdir(workspace_source_folder)
 
@@ -92,15 +85,11 @@ def build_deb_package(
     print(already_visited)
 
     debianfilename = [
-        f for f in debianfiles if re.search(regexstr, f) and f not in already_visited
+        f for f in debianfiles if re.search(regexstr, f) and not (f in already_visited)
     ][0]
 
     print("Debian file found: ")
     print(debianfilename)
-
-    os.chdir(localpackagepath)
-    shutil.rmtree("obj-x86_64-linux-gnu")
-    shutil.rmtree("debian")
 
     installdebiantask = subprocess.Popen("sudo dpkg -i " + debianfilename, shell=True)
     installdebiantask.wait()

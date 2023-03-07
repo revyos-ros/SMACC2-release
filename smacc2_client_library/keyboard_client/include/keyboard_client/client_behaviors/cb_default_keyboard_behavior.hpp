@@ -50,7 +50,7 @@ public:
         postKeyEvent<EvKeyPressG<CbDefaultKeyboardBehavior, TOrthogonal>>();
       else if (character == 'h')
         postKeyEvent<EvKeyPressH<CbDefaultKeyboardBehavior, TOrthogonal>>();
-      else if (character == 'i')
+      else if (character == 'y')
         postKeyEvent<EvKeyPressI<CbDefaultKeyboardBehavior, TOrthogonal>>();
       else if (character == 'j')
         postKeyEvent<EvKeyPressJ<CbDefaultKeyboardBehavior, TOrthogonal>>();

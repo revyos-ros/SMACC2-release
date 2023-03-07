@@ -10,14 +10,15 @@ SMACC2 is an event-driven, asynchronous, behavioral state machine library for re
 
 SMACC was inspired by Harel's statecharts and the [SMACH ROS package](http://wiki.ros.org/smach). SMACC is built on top of the [Boost StateChart library](https://www.boost.org/doc/libs/1_53_0/libs/statechart/doc/index.html).
 
+
 ## Repository Status, Packages and Documentation
 
 ROS2 Distro | Branch | Build status | Documentation | Released packages
 :---------: | :----: | :----------: | :-----------: | :---------------:
-**Foxy** | [`foxy`](https://github.com/robosoft-ai/SMACC2/tree/foxy) | [![Foxy Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/foxy-binary-build.yml/badge.svg?branch=foxy)](https://github.com/robosoft-ai/SMACC2/actions/workflows/foxy-binary-build.yml?branch=foxy) <br /> [![Foxy Semi-Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/foxy-semi-binary-build.yml/badge.svg?branch=foxy)](https://github.com/robosoft-ai/SMACC2/actions/workflows/foxy-semi-binary-build.yml?branch=foxy) | [![Doxygen Doc Deployment](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml/badge.svg)](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml) <br /> [Generated Doc](https://robosoft-ai.github.io/smacc2_doxygen/foxy/html/namespaces.html) | [SMACC2](https://index.ros.org/p/smacc2/github-robosoft-ai-SMACC2/#foxy)
-**Galactic** | [`galactic`](https://github.com/robosoft-ai/SMACC2/tree/galactic) | [![Galactic Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/galactic-binary-build.yml/badge.svg?branch=galactic)](https://github.com/robosoft-ai/SMACC2/actions/workflows/galactic-binary-build.yml?branch=galactic) <br /> [![Galactic Semi-Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/galactic-semi-binary-build.yml/badge.svg?branch=galactic)](https://github.com/robosoft-ai/SMACC2/actions/workflows/galactic-semi-binary-build.yml?branch=galactic) | [![Doxygen Doc Deployment](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml/badge.svg)](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml) <br /> [Generated Doc](https://robosoft-ai.github.io/smacc2_doxygen/galactic/html/namespaces.html) |  [![ROS Build Farm](https://build.ros2.org/job/Fdev__smacc2__ubuntu_focal_amd64/badge/icon?subject=ros-builfarm)](https://build.ros2.org/job/Fdev__smacc2__ubuntu_focal_amd64/) <br/> [SMACC2](https://index.ros.org/p/smacc2/github-robosoft-ai-SMACC2/#galactic)
-**Humble** | [`humble`](https://github.com/robosoft-ai/SMACC2/tree/humble) | [![Humble Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/humble-binary-build.yml/badge.svg?branch=humble)](https://github.com/robosoft-ai/SMACC2/actions/workflows/humble-binary-build.yml?branch=humble)<br/> [![Humble Semi-Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/humble-semi-binary-build.yml/badge.svg?branch=humble)](https://github.com/robosoft-ai/SMACC2/actions/workflows/humble-semi-binary-build.yml?branch=humble) | [![Doxygen Deployment](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml/badge.svg?branch=humble)](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml) <br /> [Generated Doc](https://robosoft-ai.github.io/smacc2_doxygen/humble/html/namespaces.html)| [SMACC2](https://index.ros.org/p/smacc2/github-robosoft-ai-SMACC2/#humble)
-**Rolling** | [`rolling`](https://github.com/robosoft-ai/SMACC2/tree/rolling) | [![Rolling Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-binary-build.yml/badge.svg?branch=rolling)](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-binary-build.yml?branch=rolling) <br /> [![Rolling Semi-Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-semi-binary-build.yml/badge.svg?branch=rolling)](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-semi-binary-build.yml?branch=rolling) | [![Doxygen Doc Deployment](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml/badge.svg)](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml) <br /> [Generated Doc](https://robosoft-ai.github.io/smacc2_doxygen/master/html/namespaces.html) | [SMACC2](https://index.ros.org/p/smacc2/github-robosoft-ai-SMACC2/#rolling)
+**Foxy** | [`foxy`](https://github.com/robosoft-ai/SMACC2/tree/foxy) | [![Foxy Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/foxy-binary-build.yml/badge.svg?branch=foxy)](https://github.com/robosoft-ai/SMACC2/actions/workflows/foxy-binary-build.yml?branch=foxy) <br /> [![Foxy Semi-Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/foxy-semi-binary-build.yml/badge.svg?branch=foxy)](https://github.com/robosoft-ai/SMACC2/actions/workflows/foxy-semi-binary-build.yml?branch=foxy) <br /> [![Foxy Source Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/foxy-source-build.yml/badge.svg?branch=foxy)](https://github.com/robosoft-ai/SMACC2/actions/workflows/foxy-source-build.yml?branch=foxy) | [![Doxygen Doc Deployment](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml/badge.svg)](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml) <br /> [Generated Doc](https://robosoft-ai.github.io/SMACC2_Documentation/foxy/html/namespacesmacc2.html) | [SMACC2](https://index.ros.org/p/SMACC2/#foxy)
+**Galactic** | [`galactic`](https://github.com/robosoft-ai/SMACC2/tree/galactic) | [![Galactic Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/galactic-binary-build.yml/badge.svg?branch=galactic)](https://github.com/robosoft-ai/SMACC2/actions/workflows/galactic-binary-build.yml?branch=galactic) <br /> [![Galactic Semi-Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/galactic-semi-binary-build.yml/badge.svg?branch=galactic)](https://github.com/robosoft-ai/SMACC2/actions/workflows/galactic-semi-binary-build.yml?branch=galactic) <br /> [![Galactic Source Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/galactic-source-build.yml/badge.svg?branch=galactic)](https://github.com/robosoft-ai/SMACC2/actions/workflows/galactic-source-build.yml?branch=galactic) | [![Doxygen Doc Deployment](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml/badge.svg)](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml) <br /> [Generated Doc](https://robosoft-ai.github.io/SMACC2_Documentation/galactic/html/namespacesmacc2.html) | [SMACC2](https://index.ros.org/p/SMACC2/#galactic)
+**Rolling - last Focal** | [`rolling`](https://github.com/robosoft-ai/SMACC2/tree/rolling) | [![Rolling Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-binary-build-last-focal.yml/badge.svg?branch=master)](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-binary-build-last-focal.yml?branch=master) <br /> [![Rolling Semi-Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-semi-binary-build-last-focal.yml/badge.svg?branch=master)](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-semi-binary-build-last-focal.yml?branch=master) | [![Doxygen Doc Deployment](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml/badge.svg)](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml) <br /> [Generated Doc](https://robosoft-ai.github.io/SMACC2_Documentation/master/html/namespacesmacc2.html) | [SMACC2](https://index.ros.org/p/SMACC2/#rolling)
+**Rolling** | [`rolling`](https://github.com/robosoft-ai/SMACC2/tree/rolling) | [![Rolling Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-binary-build.yml/badge.svg?branch=master)](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-binary-build.yml?branch=master) <br /> [![Rolling Semi-Binary Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-semi-binary-build.yml/badge.svg?branch=master)](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-semi-binary-build.yml?branch=master) <br /> [![Rolling Source Build](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-source-build.yml/badge.svg?branch=master)](https://github.com/robosoft-ai/SMACC2/actions/workflows/rolling-source-build.yml?branch=master) | [![Doxygen Doc Deployment](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml/badge.svg)](https://github.com/robosoft-ai/SMACC2/actions/workflows/doxygen-deploy.yml) <br /> [Generated Doc](https://robosoft-ai.github.io/SMACC2_Documentation/master/html/namespacesmacc2.html) | [SMACC2](https://index.ros.org/p/SMACC2/#rolling)
 
 **NOTE**: There are three build stages checking current and future compatibility of the package.
 
@@ -33,7 +34,7 @@ ROS2 Distro | Branch | Build status | Documentation | Released packages
 1. Source build - also core ROS packages are build from source. It shows potential issues in the mid future.
 
 
-## Getting started - ROS Rolling + Ubuntu 20.04 (Focal)
+## Getting started
 
 1. [Install ROS2 Rolling](https://index.ros.org/doc/ros2/Installation/Rolling/Linux-Install-Debians/).
 
@@ -41,150 +42,21 @@ ROS2 Distro | Branch | Build status | Documentation | Released packages
    ```
    sudo apt install python3-colcon-common-extensions python3-vcstool
    ```
-3. Create a new ROS2 workspace if necessary:
+
+3. Create a new ROS2 workspace:
    ```
    export COLCON_WS=~/workspace/rolling_ws
    mkdir -p $COLCON_WS/src
    ```
-4. Or just navigate to your workspace source folder:
+
+4. Pull relevant packages, install dependencies, compile, and source the workspace by using:
    ```
-   cd ~/workspace/rolling_ws/src
-   ```
-5. Clone the repo:
-   ```
-   git clone https://github.com/robosoft-ai/SMACC2.git
-   ```
-6. Navigate to the workspace:
-   ```
-   cd ~/workspace/rolling_ws
-   ```
-7. Update System:
-   ```
-   sudo apt update
-   sudo apt upgrade
-   ```
-8. Source the workspace:
-   ```
-   source /opt/ros/rolling/setup.bash
-   ```
-9. Update dependencies:
-   ```
-   rosdep update
-   ```
-10. Pull relevant packages and install dependencies:
-   ```
+   cd $COLCON_WS
+   git clone https://github.com/robosoft-ai/SMACC2.git src/SMACC2
    vcs import src --skip-existing --input src/SMACC2/SMACC2-not-released.rolling.repos
    rosdep install --ignore-src --from-paths src -y -r
-   ```
-11. Compile:
-   ```
    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
-   ```
-
-## Getting started - ROS Galactic
-
-1. [Install ROS2 Galactic](https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html).
-
-2. Make sure that `colcon`, its extensions and `vcs` are installed:
-   ```
-   sudo apt install python3-colcon-common-extensions python3-vcstool
-   ```
-3. Create a new ROS2 workspace if necessary:
-   ```
-   export COLCON_WS=~/workspace/galactic_ws
-   mkdir -p $COLCON_WS/src
-   ```
-4. Or just navigate to your workspace source folder:
-   ```
-   cd ~/workspace/galactic_ws/src
-   ```
-5. Clone the repo:
-   ```
-   git clone https://github.com/robosoft-ai/SMACC2.git
-   ```
-6. Checkout the Galactic branch:
-   ```
-   cd ~/workspace/galactic_ws/src/SMACC2
-   git checkout galactic
-   ```
-7. Navigate to the workspace:
-   ```
-   cd ~/workspace/galactic_ws
-   ```
-8. Update System:
-   ```
-   sudo apt update
-   sudo apt upgrade
-   ```
-9. Source the workspace:
-   ```
-   source /opt/ros/galactic/setup.bash
-   ```
-10. Update dependencies:
-   ```
-   rosdep update
-   ```
-11. Pull relevant packages and install dependencies:
-   ```
-   vcs import src --skip-existing --input src/SMACC2/SMACC2.galactic.repos
-   rosdep install --ignore-src --from-paths src -y -r
-   ```
-12. Compile:
-   ```
-   colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
-   ```
-
-## Getting started - ROS Foxy
-
-1. [Install ROS2 Foxy](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html).
-
-2. Make sure that `colcon`, its extensions and `vcs` are installed:
-   ```
-   sudo apt install python3-colcon-common-extensions python3-vcstool
-   ```
-3. Create a new ROS2 workspace if necessary:
-   ```
-   export COLCON_WS=~/workspace/foxy_ws
-   mkdir -p $COLCON_WS/src
-   ```
-4. Or just navigate to your workspace source folder:
-   ```
-   cd ~/workspace/foxy_ws/src
-   ```
-5. Clone the repo:
-   ```
-   git clone https://github.com/robosoft-ai/SMACC2.git
-   ```
-6. Checkout the Foxy branch:
-   ```
-   cd ~/workspace/foxy_ws/src/SMACC2
-   git checkout foxy
-   ```
-7. Navigate to the workspace:
-   ```
-   cd ~/workspace/foxy_ws
-   ```
-8. Update System:
-   ```
-   sudo apt update
-   sudo apt upgrade
-   ```
-9. Source the workspace:
-   ```
-   source /opt/ros/foxy/setup.bash
-   ```
-10. Update dependencies:
-   ```
-   rosdep update
-   ```
-11. Pull relevant packages and install dependencies:
-   ```
-   vcs import src --skip-existing --input src/SMACC2/SMACC2.foxy.repos
-   rosdep install --ignore-src --from-paths src -y -r
-   ```
-12. Compile:
-   ```
-   colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+   source install/setup.bash
    ```
 
 ## Features
@@ -194,7 +66,7 @@ ROS2 Distro | Branch | Build status | Documentation | Released packages
  *  ***Static State Machine Checking:*** One of the features that SMACC2 inherits from Boost Statechart is that you get compile time validation checking. This benefits developers in that the amount of runtime testing necessary to ship quality software that is both stable and safe is dramatically reduced. Our philosophy is "Wherever possible, let the compiler do it".
  *  ***State Machine Reference Library:*** With a constantly growing library of out-of-the-box reference state machines, (found in the folder [sm_reference_library](smacc2_sm_reference_library)) guaranteed to compile and run, you can jumpstart your development efforts by choosing a reference machine that is closest to your needs, and then customize and extend to meet the specific requirements of your robotic application. All the while knowing that the library supports advanced functionalities that are practically universal among actual working robots.
  *  ***SMACC2 Client Library:*** SMACC2 also features a constantly growing library of [clients](smacc2_client_library) that support ROS2 Action Servers, Service Servers and other nodes right out-of-the box. The clients within the SMACC2 Client library have been built utilizing a component based architecture that allows for developer to build powerful clients of their own. Current clients of note include MoveBaseZ, a full featured Action Client built to integrate with Nav2, the ros_timer_client, the multi_role_sensor_client, and a keyboard_client used extensively for state machine drafting & debugging.
-  *  ***Extensive Documentation:*** Although many ROS users are familiar with doxygen, our development team has spent a lot of time researching the more advanced features of doxygen such as uml style class diagrams and call graphs, and we've used them to document the SMACC2 library. Have a look to [our doxygen sites](https://robosoft-ai.github.io/smacc2_doxygen/master/html/namespaces.html) and we think you'll be blown away at what Doxygen looks like when [it's done right](https://robosoft-ai.github.io/smacc2_doxygen/master/html/classsmacc2_1_1ISmaccStateMachine.html) and it becomes a powerful tool to research a codebase.
+  *  ***Extensive Documentation:*** Although many ROS users are familiar with doxygen, our development team has spent a lot of time researching the more advanced features of doxygen such as uml style class diagrams and call graphs, and we've used them to document the SMACC2 library. Have a look to [our doxygen sites](https://robosoft-ai.github.io/SMACC2_Documentation/master/html/namespaces.html) and we think you'll be blown away at what Doxygen looks like when [it's done right](https://robosoft-ai.github.io/SMACC2_Documentation/master/html/classsmacc2_1_1ISmaccStateMachine.html) and it becomes a powerful tool to research a codebase.
   *  ***SMACC2 Runtime Analyzer:*** The SMACC2 library works out of the box with the SMACC2 RTA. This allows developers to visualize and runtime debug the state machines they are working on. The SMACC2 RTA is closed source, but is free for individual and academic use. It can be found [here](https://robosoft.ai/product-category/smacc2-runtime-analyzer/).
 
 

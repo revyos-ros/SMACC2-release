@@ -1,15 +1,7 @@
 pull_request_rules:
-  - name: ask to resolve conflict
-    conditions:
-      - conflict
-      - author!=mergify
-    actions:
-        comment:
-          message: This pull request is in conflict. Could you fix it @{{author}}?
-
   - name: Backport to galactic at reviewers discretion
     conditions:
-      - base=master
+      - base=main
       - "label=backport-galactic"
     actions:
       backport:
@@ -18,9 +10,17 @@ pull_request_rules:
 
   - name: backport to foxy at reviewers discretion
     conditions:
-      - base=master
+      - base=main
       - "label=backport-foxy"
     actions:
       backport:
         branches:
           - foxy
+
+  - name: ask to resolve conflict
+    conditions:
+      - conflict
+      - author!=mergify
+    actions:
+        comment:
+          message: This pull request is in conflict. Could you fix it @{{author}}?

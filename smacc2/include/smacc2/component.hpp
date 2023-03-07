@@ -53,13 +53,7 @@ protected:
   }
 
   template <typename TComponent>
-  void requiresComponent(
-    TComponent *& requiredComponentStorage, bool throwExceptionIfNotExist = false);
-
-  template <typename TComponent>
-  void requiresComponent(
-    std::string name, TComponent *& requiredComponentStorage,
-    bool throwExceptionIfNotExist = false);
+  void requiresComponent(TComponent *& requiredComponentStorage);
 
   template <typename TClient>
   void requiresClient(TClient *& requiredClientStorage);
@@ -72,7 +66,7 @@ protected:
 
   rclcpp::Node::SharedPtr getNode();
 
-  rclcpp::Logger getLogger() const;
+  rclcpp::Logger getLogger();
 
   //inline
   ISmaccStateMachine * getStateMachine();

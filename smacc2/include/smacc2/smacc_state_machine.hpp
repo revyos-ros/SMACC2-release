@@ -52,7 +52,7 @@ enum class StateMachineInternalAction
 {
   STATE_CONFIGURING,
   STATE_ENTERING,
-  STATE_RUNNING,
+  STATE_STEADY,
   STATE_EXITING,
   TRANSITIONING
 };
@@ -63,9 +63,7 @@ enum class StateMachineInternalAction
 class ISmaccStateMachine
 {
 public:
-  ISmaccStateMachine(
-    std::string stateMachineName, SignalDetector * signalDetector,
-    rclcpp::NodeOptions nodeOptions = rclcpp::NodeOptions());
+  ISmaccStateMachine(std::string stateMachineName, SignalDetector * signalDetector);
 
   virtual ~ISmaccStateMachine();
 
@@ -78,20 +76,10 @@ public:
   template <typename TOrthogonal>
   TOrthogonal * getOrthogonal();
 
-  // gets the client behavior in a given orthogonal
-  // the index is used to distinguish between multiple client behaviors of the same type
-  template <typename TOrthogonal, typename TClientBehavior>
-  inline TClientBehavior * getClientBehavior(int index = 0)
-  {
-    auto orthogonal = this->template getOrthogonal<TOrthogonal>();
-
-    return orthogonal->template getClientBehavior<TClientBehavior>(index);
-  }
-
   const std::map<std::string, std::shared_ptr<smacc2::ISmaccOrthogonal>> & getOrthogonals() const;
 
   template <typename SmaccComponentType>
-  void requiresComponent(SmaccComponentType *& storage, bool throwsExceptionIfNotExist = false);
+  void requiresComponent(SmaccComponentType *& storage);
 
   template <typename EventType>
   void postEvent(EventType * ev, EventLifeTime evlifetime = EventLifeTime::ABSOLUTE);

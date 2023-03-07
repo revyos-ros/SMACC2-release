@@ -18,7 +18,6 @@
  *
  ******************************************************************************************************************/
 
-#include <signal.h>
 #include <limits>
 #include <memory>
 #include <thread>
@@ -41,13 +40,12 @@ using namespace std::chrono_literals;
 * SignalDetector()
 ******************************************************************************************************************
 */
-SignalDetector::SignalDetector(SmaccFifoScheduler * scheduler, ExecutionModel executionModel)
+SignalDetector::SignalDetector(SmaccFifoScheduler * scheduler)
 {
   scheduler_ = scheduler;
   loop_rate_hz = 20.0;
   end_ = false;
   initialized_ = false;
-  executionModel_ = executionModel;
 }
 
 rclcpp::Node::SharedPtr SignalDetector::getNode() { return this->smaccStateMachine_->getNode(); }
@@ -227,10 +225,10 @@ void SignalDetector::pollOnce()
 
     if (currentState != nullptr)
     {
-      // RCLCPP_INFO_THROTTLE(
-      //   getLogger(), *(getNode()->get_clock()), 10000,
-      //   "[SignalDetector] heartbeat. Current State: %s",
-      //   demangleType(typeid(*currentState)).c_str());
+      RCLCPP_INFO_THROTTLE(
+        getLogger(), *(getNode()->get_clock()), 10000,
+        "[SignalDetector] heartbeat. Current State: %s",
+        demangleType(typeid(*currentState)).c_str());
     }
 
     this->findUpdatableClientsAndComponents();
@@ -268,8 +266,6 @@ void SignalDetector::pollOnce()
       this->smaccStateMachine_->stateMachineCurrentAction !=
         StateMachineInternalAction::STATE_CONFIGURING &&
       this->smaccStateMachine_->stateMachineCurrentAction !=
-        StateMachineInternalAction::STATE_ENTERING &&
-      this->smaccStateMachine_->stateMachineCurrentAction !=
         StateMachineInternalAction::STATE_EXITING)
     {
       // we do not update updatable elements during trasitioning or configuration of states
@@ -295,23 +291,21 @@ void SignalDetector::pollOnce()
           }
 
           RCLCPP_DEBUG_STREAM(
-            getLogger(), "[SignalDetector] updatable state element count: "
-                           << this->updatableStateElements_.size());
+            getLogger(),
+            "[SignalDetector] updatable state elements: " << this->updatableStateElements_.size());
           auto node = getNode();
           for (auto * udpatableStateElement : this->updatableStateElements_)
           {
-            std::string updatableElementName = demangleType(typeid(*udpatableStateElement));
-            auto updatableElementNameCstr = updatableElementName.c_str();
-
+            auto updatableElementName = demangleType(typeid(*udpatableStateElement)).c_str();
             try
             {
               RCLCPP_DEBUG_STREAM(
                 getLogger(),
-                "[SignalDetector] client behavior: " << updatableElementName << "::update()");
+                "[SignalDetector] update client behavior call: " << updatableElementName);
 
-              TRACEPOINT(smacc2_state_update_start, updatableElementNameCstr);
+              TRACEPOINT(smacc2_state_update_start, updatableElementName);
               udpatableStateElement->executeUpdate(smaccStateMachine_->getNode());
-              TRACEPOINT(smacc2_state_update_start, updatableElementNameCstr);
+              TRACEPOINT(smacc2_state_update_start, updatableElementName);
             }
             catch (const std::exception & e)
             {
@@ -372,34 +366,13 @@ void SignalDetector::pollingLoop()
 
   RCLCPP_INFO_STREAM(getLogger(), "[SignalDetector] loop rate hz:" << loop_rate_hz);
 
-  if (this->executionModel_ == ExecutionModel::SINGLE_THREAD_SPINNER)
-  {
-    RCLCPP_INFO_STREAM(getLogger(), "[SignalDetector] running in single threaded mode");
+  rclcpp::Rate r(loop_rate_hz);
 
-    rclcpp::Rate r(loop_rate_hz);
-    while (rclcpp::ok() && !end_)
-    {
-      RCLCPP_INFO_STREAM_THROTTLE(
-        getLogger(), *getNode()->get_clock(), 10000, "[SignalDetector] heartbeat");
-      pollOnce();
-      rclcpp::spin_some(nh);
-      r.sleep();
-    }
-  }
-  else
+  while (rclcpp::ok() && !end_)
   {
-    RCLCPP_INFO_STREAM(getLogger(), "[SignalDetector] running in multi threaded mode");
-
-    rclcpp::executors::MultiThreadedExecutor executor;
-    executor.add_node(nh);
-    executor.spin();
+    pollOnce();
+    rclcpp::spin_some(nh);
+    r.sleep();
   }
 }
-
-void onSigQuit(int)
-{
-  RCLCPP_INFO(rclcpp::get_logger("SMACC"), "SignalDetector: SIGQUIT received");
-  exit(0);
-}
-
 }  // namespace smacc2

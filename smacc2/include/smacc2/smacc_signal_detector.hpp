@@ -26,18 +26,10 @@
 
 namespace smacc2
 {
-enum class ExecutionModel
-{
-  SINGLE_THREAD_SPINNER,
-  MULTI_THREAD_SPINNER
-};
-
 class SignalDetector
 {
 public:
-  SignalDetector(
-    SmaccFifoScheduler * scheduler,
-    ExecutionModel executionModel = ExecutionModel::SINGLE_THREAD_SPINNER);
+  SignalDetector(SmaccFifoScheduler * scheduler);
 
   void initialize(ISmaccStateMachine * stateMachine);
 
@@ -75,7 +67,6 @@ private:
   std::atomic<uint64_t> lastState_;
 
   void findUpdatableClientsAndComponents();
-
   void findUpdatableStateElements(ISmaccState * currentState);
 
   // Loop frequency of the signal detector (to check answers from actionservers)
@@ -94,11 +85,7 @@ private:
   SmaccFifoScheduler::processor_handle processorHandle_;
 
   boost::thread signalDetectorThread_;
-
-  ExecutionModel executionModel_;
 };
-
-void onSigQuit(int sig);
 
 // Main entry point for any SMACC state machine
 // It instantiates and starts the specified state machine type
@@ -106,15 +93,13 @@ void onSigQuit(int sig);
 // The created thread is for the state machine process
 // it locks the current thread to handle events of the state machine
 template <typename StateMachineType>
-void run(ExecutionModel executionModel = ExecutionModel::SINGLE_THREAD_SPINNER)
+void run()
 {
-  ::signal(SIGQUIT, onSigQuit);
-
   // create the asynchronous state machine scheduler
   SmaccFifoScheduler scheduler1(true);
 
   // create the signalDetector component
-  SignalDetector signalDetector(&scheduler1, executionModel);
+  SignalDetector signalDetector(&scheduler1);
 
   // create the asynchronous state machine processor
   SmaccFifoScheduler::processor_handle sm =
@@ -126,49 +111,10 @@ void run(ExecutionModel executionModel = ExecutionModel::SINGLE_THREAD_SPINNER)
   scheduler1.initiate_processor(sm);
 
   //create a thread for the asynchronous state machine processor execution
-  boost::thread schedulerThread(boost::bind(&sc::fifo_scheduler<>::operator(), &scheduler1, 0));
+  boost::thread otherThread(boost::bind(&sc::fifo_scheduler<>::operator(), &scheduler1, 0));
 
   // use the  main thread for the signal detector component (waiting actionclient requests)
   signalDetector.pollingLoop();
-}
-
-struct SmExecution
-{
-  boost::thread * schedulerThread;
-  boost::thread * signalDetectorLoop;
-  SignalDetector * signalDetector;
-  SmaccFifoScheduler * scheduler1;
-  SmaccFifoScheduler::processor_handle sm;
-};
-
-template <typename StateMachineType>
-SmExecution * run_async()
-{
-  ::signal(SIGQUIT, onSigQuit);
-
-  SmExecution * ret = new SmExecution();
-
-  // create the asynchronous state machine scheduler
-  ret->scheduler1 = new SmaccFifoScheduler(true);
-
-  // create the signalDetector component
-  ret->signalDetector = new SignalDetector(ret->scheduler1);
-
-  // create the asynchronous state machine processor
-  ret->sm = ret->scheduler1->create_processor<StateMachineType>(ret->signalDetector);
-
-  // initialize the asynchronous state machine processor
-  ret->signalDetector->setProcessorHandle(ret->sm);
-
-  ret->scheduler1->initiate_processor(ret->sm);
-
-  //create a thread for the asynchronous state machine processor execution
-  ret->schedulerThread =
-    new boost::thread(boost::bind(&sc::fifo_scheduler<>::operator(), ret->scheduler1, NULL));
-  ret->signalDetectorLoop =
-    new boost::thread(boost::bind(&SignalDetector::pollingLoop, ret->signalDetector));
-
-  return ret;
 }
 
 }  // namespace smacc2
