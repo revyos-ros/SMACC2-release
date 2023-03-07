@@ -1,0 +1,12 @@
+Source: ros-humble-sm-test-moveit-ur5-sim
+Section: misc
+Priority: optional
+Maintainer: SMACC2 is cool <smacc2@smacc2.cool>
+Build-Depends: debhelper (>= 9.0.0), libboost-thread-dev, ros-humble-ament-cmake, ros-humble-controller-manager, ros-humble-move-group-interface-client, ros-humble-ros-timer-client, ros-humble-smacc2, ros-humble-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-humble-sm-test-moveit-ur5-sim
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libboost-thread-dev, ros-humble-controller-manager, ros-humble-joint-trajectory-controller, ros-humble-move-group-interface-client, ros-humble-ros-timer-client, ros-humble-smacc2, ros-humble-ros-workspace
+Description: The sm_test_moveit_ur5_sim package
