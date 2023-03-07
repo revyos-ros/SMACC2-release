@@ -10,30 +10,21 @@ on:
 jobs:
   pre-commit:
     name: Format
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    container:
+      image: osrf/ros:humble-desktop
+
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-      #with:
-      #  python-version: 3.9.7
 
-    - name: Install clang-format
+    - name: Install clang-format-12
       run: |
-       sudo apt-get update
-       sudo apt-get install -y clang-format-12 cppcheck
+       apt update
+       apt install -y python3-pip clang-format-12 ros-humble-ament-cppcheck
        git config --global --add safe.directory `pwd`
-       pip3 install pre-commit
-
-    - uses: ros-tooling/setup-ros@v0.2
-      with:
-        required-ros-distributions: galactic
-
-    # - uses: pre-commit/action@v2.0.3
-    #   with:
-    #     extra_args: --all-files --hook-stage manual
-
-    - name: "pre-commit"
+       pip install pre-commit
+    - name: pre-commit
+      shell: bash
       run: |
-        source /opt/ros/galactic/setup.bash
-        echo `pwd`
+        source /opt/ros/humble/setup.bash
         pre-commit run -a

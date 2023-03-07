@@ -21,10 +21,10 @@
 //#include <dynamic_reconfigure/server.h>
 //#include <backward_local_planner/BackwardLocalPlannerConfig.h>
 #include <tf2/transform_datatypes.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/buffer.h>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <nav2_core/controller.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 
 #include <tf2/utils.h>
@@ -46,8 +46,8 @@ public:
 
   void configure(
     const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent, std::string name,
-    const std::shared_ptr<tf2_ros::Buffer> & tf,
-    const std::shared_ptr<nav2_costmap_2d::Costmap2DROS> & costmap_ros) override;
+    const std::shared_ptr<tf2_ros::Buffer> tf,
+    const std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros) override;
 
   void activate() override;
 
