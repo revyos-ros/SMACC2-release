@@ -1,0 +1,12 @@
+Source: ros-humble-sm-multi-panda-sim
+Section: misc
+Priority: optional
+Maintainer: SMACC2 is cool <smacc2@smacc2.cool>
+Build-Depends: debhelper (>= 9.0.0), libboost-thread-dev, ros-humble-ament-cmake, ros-humble-controller-manager, ros-humble-keyboard-client, ros-humble-move-group-interface-client, ros-humble-moveit-configs-utils, ros-humble-ros-publisher-client, ros-humble-ros-timer-client, ros-humble-smacc2, ros-humble-sr-all-events-go, xterm, ros-humble-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-humble-sm-multi-panda-sim
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libboost-thread-dev, ros-humble-controller-manager, ros-humble-keyboard-client, ros-humble-move-group-interface-client, ros-humble-moveit-configs-utils, ros-humble-moveit-resources-panda-description, ros-humble-ros-publisher-client, ros-humble-ros-timer-client, ros-humble-smacc2, ros-humble-sr-all-events-go, xterm, ros-humble-ros-workspace
+Description: The sm_multi_panda_sim package
