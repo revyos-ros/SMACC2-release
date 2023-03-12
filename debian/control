@@ -1,0 +1,12 @@
+Source: ros-humble-pure-spinning-local-planner
+Section: misc
+Priority: optional
+Maintainer: Pablo Iñigo Blasco <pablo@ibrobotics.com>
+Build-Depends: debhelper (>= 9.0.0), ros-humble-ament-cmake, ros-humble-geometry-msgs, ros-humble-nav-2d-utils, ros-humble-nav-msgs, ros-humble-nav2-core, ros-humble-nav2-costmap-2d, ros-humble-nav2z-planners-common, ros-humble-pluginlib, ros-humble-tf2, ros-humble-tf2-geometry-msgs, ros-humble-tf2-ros, ros-humble-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-humble-pure-spinning-local-planner
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-humble-geometry-msgs, ros-humble-nav-2d-utils, ros-humble-nav-msgs, ros-humble-nav2-core, ros-humble-nav2-costmap-2d, ros-humble-nav2z-planners-common, ros-humble-tf2, ros-humble-tf2-geometry-msgs, ros-humble-tf2-ros, ros-humble-ros-workspace
+Description: The pure_spinning_local_planner package
