@@ -1,0 +1,12 @@
+Source: ros-foxy-sm-atomic
+Section: misc
+Priority: optional
+Maintainer: Pablo Inigo Blasco <pablo@ibrobotics.com>
+Build-Depends: debhelper (>= 9.0.0), ros-foxy-ament-cmake, ros-foxy-ros-timer-client, ros-foxy-smacc2, ros-foxy-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-foxy-sm-atomic
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-foxy-ros-timer-client, ros-foxy-smacc2, xterm, ros-foxy-ros-workspace
+Description: The sm_atomic package
