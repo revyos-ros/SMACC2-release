@@ -1,3 +1,4 @@
+release_repo_url: https://github.com/robosoft-ai/SMACC2-release
 tracks:
   foxy:
     actions:
