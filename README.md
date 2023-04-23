@@ -1,3 +1,31 @@
+## smacc2 (foxy) - 2.1.21-1
+
+The packages in the `smacc2` repository were released into the `foxy` distro by running `/usr/bin/bloom-release -y --no-web --ros-distro foxy --override-release-repository-push-url https://github.com/robosoft-ai/SMACC2-release --debug smacc2` on `Sun, 23 Apr 2023 23:37:36 -0000`
+
+These packages were released:
+- `ros_timer_client`
+- `sm_atomic`
+- `sm_atomic_mode_states`
+- `smacc2`
+- `smacc2_msgs`
+
+Version of package(s) in repository `smacc2`:
+
+- upstream repository: https://github.com/robosoft-ai/SMACC2.git
+- release repository: https://github.com/robosoft-ai/SMACC2-release.git
+- rosdistro version: `2.1.0-1`
+- old version: `2.1.0-1`
+- new version: `2.1.21-1`
+
+Versions of tools used:
+
+- bloom version: `0.11.2`
+- catkin_pkg version: `0.5.2`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## smacc2 (humble) - 2.3.8-1
 
 The packages in the `smacc2` repository were released into the `humble` distro by running `/usr/bin/bloom-release --ros-distro humble --track humble smacc2` on `Sun, 12 Mar 2023 22:18:50 -0000`
