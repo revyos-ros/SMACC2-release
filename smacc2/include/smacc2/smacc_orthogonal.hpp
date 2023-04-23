@@ -31,6 +31,8 @@ public:
 
   inline ISmaccStateMachine * getStateMachine();
 
+  void initState(ISmaccState * state);
+
   void addClientBehavior(std::shared_ptr<smacc2::ISmaccClientBehavior> clientBehavior);
 
   void runtimeConfigure();
@@ -38,6 +40,8 @@ public:
   void onEntry();
 
   void onExit();
+
+  void onDispose();
 
   virtual std::string getName() const;
 
@@ -49,8 +53,8 @@ public:
 
   inline const std::vector<std::shared_ptr<smacc2::ISmaccClient>> & getClients();
 
-  inline const std::vector<std::shared_ptr<smacc2::ISmaccClientBehavior>> & getClientBehaviors()
-    const;
+  inline const std::vector<std::vector<std::shared_ptr<smacc2::ISmaccClientBehavior>>> &
+  getClientBehaviors() const;
 
   template <typename T>
   void setGlobalSMData(std::string name, T value);
@@ -58,8 +62,6 @@ public:
   template <typename T>
   bool getGlobalSMData(std::string name, T & ret);
 
-  // returns a client behavior of a given type. If the client behavior is not found, it returns nullptr
-  // the index parameter is used to specify the client behavior in case there are more than one
   template <typename TClientBehavior>
   TClientBehavior * getClientBehavior(int index = 0);
 
@@ -79,7 +81,7 @@ protected:
 private:
   ISmaccStateMachine * stateMachine_;
 
-  std::vector<std::shared_ptr<smacc2::ISmaccClientBehavior>> clientBehaviors_;
+  std::vector<std::vector<std::shared_ptr<smacc2::ISmaccClientBehavior>>> clientBehaviors_;
   friend class ISmaccStateMachine;
 
   std::mutex mutex_;

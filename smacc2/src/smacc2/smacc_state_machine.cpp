@@ -33,17 +33,17 @@ namespace smacc2
 using namespace std::chrono_literals;
 using namespace smacc2::introspection;
 ISmaccStateMachine::ISmaccStateMachine(
-  std::string stateMachineName, SignalDetector * signalDetector, rclcpp::NodeOptions nodeOptions)
-: nh_(nullptr), currentState_(nullptr), stateSeqCounter_(0)
+  std::string stateMachineName, SignalDetector * signalDetector)
+: nh_(nullptr), stateSeqCounter_(0)
 {
+  rclcpp::NodeOptions node_options;
   // This enables loading arbitrary parameters
   // However, best practice would be to declare parameters in the corresponding classes
   // and provide descriptions about expected use
   // TODO(henningkayser): remove once all parameters are declared inside the components
   // node_options.automatically_declare_parameters_from_overrides(true);
 
-  nh_ = rclcpp::Node::make_shared(
-    stateMachineName, nodeOptions.automatically_declare_parameters_from_overrides(true));  //
+  nh_ = rclcpp::Node::make_shared(stateMachineName, node_options);  //
   RCLCPP_INFO_STREAM(
     nh_->get_logger(), "Creating State Machine Base: " << nh_->get_fully_qualified_name());
 
@@ -75,6 +75,22 @@ ISmaccStateMachine::ISmaccStateMachine(
 ISmaccStateMachine::~ISmaccStateMachine()
 {
   RCLCPP_INFO(nh_->get_logger(), "Finishing State Machine");
+}
+
+void ISmaccStateMachine::disconnectSmaccSignalObject(void * object_ptr)
+{
+  RCLCPP_INFO(
+    nh_->get_logger(), "[SmaccSignals] object signal disconnecting %ld", (long)object_ptr);
+  if (stateCallbackConnections.count(object_ptr) > 0)
+  {
+    auto callbackSemaphore = stateCallbackConnections[object_ptr];
+    callbackSemaphore->finalize();
+    stateCallbackConnections.erase(object_ptr);
+  }
+  else
+  {
+    RCLCPP_INFO(nh_->get_logger(), "[SmaccSignals] no signals found %ld", (long)object_ptr);
+  }
 }
 
 rclcpp::Node::SharedPtr ISmaccStateMachine::getNode() { return this->nh_; }
@@ -152,11 +168,11 @@ void ISmaccStateMachine::initializeROS(std::string shortname)
   RCLCPP_WARN_STREAM(nh_->get_logger(), "State machine base creation:" << shortname);
   // STATE MACHINE TOPICS
   stateMachinePub_ = nh_->create_publisher<smacc2_msgs::msg::SmaccStateMachine>(
-    shortname + "/smacc/state_machine_description", rclcpp::QoS(1));
-  stateMachineStatusPub_ = nh_->create_publisher<smacc2_msgs::msg::SmaccStatus>(
-    shortname + "/smacc/status", rclcpp::QoS(1));
+    shortname + "/smacc/state_machine_description", 1);
+  stateMachineStatusPub_ =
+    nh_->create_publisher<smacc2_msgs::msg::SmaccStatus>(shortname + "/smacc/status", 1);
   transitionLogPub_ = nh_->create_publisher<smacc2_msgs::msg::SmaccTransitionLogEntry>(
-    shortname + "/smacc/transition_log", rclcpp::QoS(1));
+    shortname + "/smacc/transition_log", 1);
 
   // STATE MACHINE SERVICES
   transitionHistoryService_ = nh_->create_service<smacc2_msgs::srv::SmaccGetTransitionHistory>(
@@ -193,37 +209,21 @@ void ISmaccStateMachine::state_machine_visualization()
   stateMachineStatusPub_->publish(status_msg_);
 }
 
-// void ISmaccStateMachine::lockStateMachine(std::string msg)
-// {
-//   RCLCPP_DEBUG(nh_->get_logger(), "-- locking SM: %s", msg.c_str());
-//   m_mutex_.lock();
-// }
+void ISmaccStateMachine::lockStateMachine(std::string msg)
+{
+  RCLCPP_DEBUG(nh_->get_logger(), "-- locking SM: %s", msg.c_str());
+  m_mutex_.lock();
+}
 
-// void ISmaccStateMachine::unlockStateMachine(std::string msg)
-// {
-//   RCLCPP_DEBUG(nh_->get_logger(), "-- unlocking SM: %s", msg.c_str());
-//   m_mutex_.unlock();
-// }
+void ISmaccStateMachine::unlockStateMachine(std::string msg)
+{
+  RCLCPP_DEBUG(nh_->get_logger(), "-- unlocking SM: %s", msg.c_str());
+  m_mutex_.unlock();
+}
 
 std::string ISmaccStateMachine::getStateMachineName()
 {
   return demangleSymbol(typeid(*this).name());
-}
-
-void ISmaccStateMachine::disposeStateAndDisconnectSignals()
-{
-  for (auto & conn : this->stateCallbackConnections)
-  {
-    RCLCPP_WARN_STREAM(
-      getLogger(),
-      "[StateMachine] Disconnecting scoped-lifetime SmaccSignal "
-      "subscription");
-    conn.disconnect();
-  }
-
-  this->stateCallbackConnections.clear();
-
-  currentState_ = nullptr;
 }
 
 void ISmaccStateMachine::checkStateMachineConsistence()

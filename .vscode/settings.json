@@ -109,11 +109,8 @@
         "image": "cpp",
         "primitiveset": "cpp",
         "*.ipp": "cpp",
-        "core": "cpp",
-        "compare": "cpp",
-        "concepts": "cpp",
-        "*.txx": "cpp"
-
+        "ranges": "cpp",
+        "stop_token": "cpp"
     },
     "python.autoComplete.extraPaths": [
         "/opt/ros/galactic/lib/python3.8/site-packages"
@@ -121,6 +118,6 @@
     "python.analysis.extraPaths": [
         "/opt/ros/galactic/lib/python3.8/site-packages"
     ],
-    "cmake.sourceDirectory": "${workspaceFolder}/SMACC2/smacc2",
+    "cmake.sourceDirectory": "${workspaceFolder}/smacc2",
 
 }

@@ -72,7 +72,7 @@ TComponent * ISmaccClient::getComponent(std::string name)
 {
   for (auto & component : components_)
   {
-    if (!name.empty() && component.first.name != name) continue;
+    if (component.first.name != name) continue;
 
     auto * tcomponent = dynamic_cast<TComponent *>(component.second.get());
     if (tcomponent != nullptr)

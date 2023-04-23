@@ -126,7 +126,7 @@ public:
     this->getStateMachine().notifyOnStateExitting(derivedThis);
     {
       std::lock_guard<std::recursive_mutex> lock(this->getStateMachine().getMutex());
-      this->getStateMachine().disposeStateAndDisconnectSignals();
+      this->getStateMachine().notifyOnStateExitting(derivedThis);
       try
       {
         TRACEPOINT(smacc2_state_onExit_start, STATE_NAME);
@@ -414,27 +414,27 @@ private:
   {
     // finally we go to the derived state onEntry Function
 
-    RCLCPP_DEBUG(getLogger(), "[%s] State object created. Initializating...", STATE_NAME);
+    RCLCPP_INFO(getLogger(), "[%s] State object created. Initializating...", STATE_NAME);
     this->getStateMachine().notifyOnStateEntryStart(static_cast<MostDerived *>(this));
 
-    RCLCPP_DEBUG_STREAM(
+    RCLCPP_INFO_STREAM(
       getLogger(), "[" << smacc2::utils::cleanShortTypeName(typeid(MostDerived)).c_str()
                        << "] creating ros subnode");
 
     // before dynamic runtimeConfigure, we execute the staticConfigure behavior configurations
     {
-      RCLCPP_DEBUG(getLogger(), "[%s] -- STATIC STATE DESCRIPTION --", STATE_NAME);
+      RCLCPP_INFO(getLogger(), "[%s] -- STATIC STATE DESCRIPTION --", STATE_NAME);
 
-      for (const auto & clientBehavior : SmaccStateInfo::staticBehaviorInfo)
+      for (const auto & stateReactorsVector : SmaccStateInfo::staticBehaviorInfo)
       {
         RCLCPP_DEBUG(
-          getLogger(), "[%s] client behavior info: %s", STATE_NAME,
-          demangleSymbol(clientBehavior.first->name()).c_str());
-        for (auto & cbinfo : clientBehavior.second)
+          getLogger(), "[%s] state reactor info: %s", STATE_NAME,
+          demangleSymbol(stateReactorsVector.first->name()).c_str());
+        for (auto & srinfo : stateReactorsVector.second)
         {
           RCLCPP_DEBUG(
-            getLogger(), "[%s] client behavior: %s", STATE_NAME,
-            demangleSymbol(cbinfo.behaviorType->name()).c_str());
+            getLogger(), "[%s] state reactor: %s", STATE_NAME,
+            demangleSymbol(srinfo.behaviorType->name()).c_str());
         }
       }
 
@@ -443,6 +443,14 @@ private:
       auto & staticDefinedStateReactors = SmaccStateInfo::stateReactorsInfo[tindex];
       auto & staticDefinedEventGenerators = SmaccStateInfo::eventGeneratorsInfo[tindex];
 
+      for (auto & ortho : this->getStateMachine().getOrthogonals())
+      {
+        RCLCPP_INFO(
+          getLogger(), "[%s] Initializing orthogonal: %s", STATE_NAME,
+          demangleSymbol(typeid(*ortho.second).name()).c_str());
+        ortho.second->initState(this);
+      }
+
       RCLCPP_DEBUG_STREAM(
         getLogger(), "finding static client behaviors. State Database: "
                        << SmaccStateInfo::staticBehaviorInfo.size() << ". Current state "
@@ -450,7 +458,7 @@ private:
                        << " cbs: " << SmaccStateInfo::staticBehaviorInfo[tindex].size());
       for (auto & bhinfo : staticDefinedBehaviors)
       {
-        RCLCPP_DEBUG(
+        RCLCPP_INFO(
           getLogger(), "[%s] Creating static client behavior: %s", STATE_NAME,
           demangleSymbol(bhinfo.behaviorType->name()).c_str());
         bhinfo.factoryFunction(this);
@@ -458,7 +466,7 @@ private:
 
       for (auto & sr : staticDefinedStateReactors)
       {
-        RCLCPP_DEBUG(
+        RCLCPP_INFO(
           getLogger(), "[%s] Creating static state reactor: %s", STATE_NAME,
           sr->stateReactorType->getFullName().c_str());
         sr->factoryFunction(this);
@@ -466,16 +474,16 @@ private:
 
       for (auto & eg : staticDefinedEventGenerators)
       {
-        RCLCPP_DEBUG(
+        RCLCPP_INFO(
           getLogger(), "[%s] Creating static event generator: %s", STATE_NAME,
           eg->eventGeneratorType->getFullName().c_str());
         eg->factoryFunction(this);
       }
 
-      RCLCPP_DEBUG(getLogger(), "[%s] ---- END STATIC DESCRIPTION", STATE_NAME);
+      RCLCPP_INFO(getLogger(), "[%s] ---- END STATIC DESCRIPTION", STATE_NAME);
     }
 
-    RCLCPP_DEBUG(getLogger(), "[%s] State runtime configuration", STATE_NAME);
+    RCLCPP_INFO(getLogger(), "[%s] State runtime configuration", STATE_NAME);
 
     auto * derivedthis = static_cast<MostDerived *>(this);
 
@@ -489,7 +497,7 @@ private:
 
     this->getStateMachine().notifyOnRuntimeConfigurationFinished(derivedthis);
 
-    RCLCPP_DEBUG(getLogger(), "[%s] State OnEntry", STATE_NAME);
+    RCLCPP_INFO(getLogger(), "[%s] State OnEntry", STATE_NAME);
 
     static_cast<MostDerived *>(this)->onEntry();
 

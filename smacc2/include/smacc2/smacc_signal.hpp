@@ -41,12 +41,5 @@ class SmaccSignal
 : public boost::signals2::signal<
     Signature, Combiner, Group, GroupCompare, SlotFunction, ExtendedSlotFunction, Mutex>
 {
-public:
-  typedef std::shared_ptr<SmaccSignal<
-    Signature, Combiner, Group, GroupCompare, SlotFunction, ExtendedSlotFunction, Mutex>>
-    SharedPtr;
-  typedef std::weak_ptr<SmaccSignal<
-    Signature, Combiner, Group, GroupCompare, SlotFunction, ExtendedSlotFunction, Mutex>>
-    WeakPtr;
 };
 }  // namespace smacc2

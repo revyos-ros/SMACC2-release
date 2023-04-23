@@ -33,11 +33,8 @@ struct SmaccStateMachineBase
     DerivedStateMachine, InitialStateType, SmaccFifoScheduler, SmaccAllocator>
 {
 public:
-  SmaccStateMachineBase(
-    my_context ctx, SignalDetector * signalDetector,
-    rclcpp::NodeOptions node_options = rclcpp::NodeOptions())
-  : ISmaccStateMachine(
-      smacc2::utils::cleanShortTypeName<DerivedStateMachine>(), signalDetector, node_options),
+  SmaccStateMachineBase(my_context ctx, SignalDetector * signalDetector)
+  : ISmaccStateMachine(smacc2::utils::cleanShortTypeName<DerivedStateMachine>(), signalDetector),
     sc::asynchronous_state_machine<
       DerivedStateMachine, InitialStateType, SmaccFifoScheduler, SmaccAllocator>(ctx)
   {
