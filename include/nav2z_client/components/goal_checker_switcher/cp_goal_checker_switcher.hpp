@@ -19,25 +19,29 @@
  ******************************************************************************************************************/
 #pragma once
 
-#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
-#include <smacc2/smacc.hpp>
+#include <string>
+
+#include <rclcpp/rclcpp.hpp>
+#include <smacc2/component.hpp>
+#include <std_msgs/msg/string.hpp>
 
 namespace cl_nav2z
 {
-class Amcl : public smacc2::ISmaccComponent
+// this class is used to switch the current goal checker of the remote navigation2 stack controller
+class CpGoalCheckerSwitcher : public smacc2::ISmaccComponent
 {
 public:
-  Amcl();
-  virtual ~Amcl();
-
-  std::string getName() const override;
-
+  CpGoalCheckerSwitcher(
+    std::string goal_checker_selector_topic = "goal_checker_selector",
+    std::string default_goal_checker_name = "goal_checker");
   void onInitialize() override;
-
-  void setInitialPose(const geometry_msgs::msg::PoseWithCovarianceStamped & initialpose);
+  virtual ~CpGoalCheckerSwitcher();
+  void setDefaultGoalChecker();
+  void setGoalCheckerId(std::string goal_checker_id);
 
 private:
-  rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initalPosePub_;
+  std::string goal_checker_selector_topic_;
+  std::string default_goal_checker_name_;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr goal_checker_selector_pub_;
 };
-
 }  // namespace cl_nav2z

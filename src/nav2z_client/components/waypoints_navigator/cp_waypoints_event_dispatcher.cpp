@@ -17,27 +17,14 @@
  * 	 Authors: Pablo Inigo Blasco, Brett Aldrich
  *
  ******************************************************************************************************************/
-#include <nav2z_client/components/amcl/amcl.hpp>
 
-#include <string>
+#include <nav2z_client/components/waypoints_navigator/cp_waypoints_event_dispatcher.hpp>
 
 namespace cl_nav2z
 {
-Amcl::Amcl() {}
-
-Amcl::~Amcl() {}
-
-std::string Amcl::getName() const { return "AMCL"; }
-
-void Amcl::onInitialize()
+void WaypointEventDispatcher::postWaypointEvent(int index)
 {
-  initalPosePub_ = getNode()->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
-    "initialpose", rclcpp::QoS(10));
+  auto & fn = postWaypointFn[index % WAYPOINTS_EVENTCOUNT];
+  if (fn != nullptr) fn();
 }
-
-void Amcl::setInitialPose(const geometry_msgs::msg::PoseWithCovarianceStamped & initialpose)
-{
-  initalPosePub_->publish(initialpose);
-}
-
 }  // namespace cl_nav2z

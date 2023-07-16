@@ -19,7 +19,7 @@
  ******************************************************************************************************************/
 #pragma once
 
-#include <nav2z_client/components/waypoints_navigator/waypoints_navigator.hpp>
+#include <nav2z_client/components/waypoints_navigator/cp_waypoints_navigator.hpp>
 #include <nav2z_client/nav2z_client.hpp>
 
 #include <smacc2/smacc.hpp>
@@ -34,7 +34,7 @@ class ClNav2Z;
 class CpWaypointsVisualizer : public smacc2::ISmaccComponent, public smacc2::ISmaccUpdatable
 {
 public:
-  cl_nav2z::WaypointNavigator * waypointsNavigator_;
+  cl_nav2z::CpWaypointNavigator * waypointsNavigator_;
 
   CpWaypointsVisualizer(rclcpp::Duration duration);
 

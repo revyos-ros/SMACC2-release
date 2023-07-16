@@ -17,40 +17,27 @@
  * 	 Authors: Pablo Inigo Blasco, Brett Aldrich
  *
  ******************************************************************************************************************/
-#pragma once
+#include <nav2z_client/components/amcl/cp_amcl.hpp>
 
-#include <tf2_ros/buffer.h>
-
-#include <nav2z_client/components/odom_tracker/cp_odom_tracker.hpp>
-#include "cb_nav2z_client_behavior_base.hpp"
+#include <string>
 
 namespace cl_nav2z
 {
-using ::cl_nav2z::odom_tracker::CpOdomTracker;
+CpAmcl::CpAmcl() {}
 
-struct CbUndoPathBackwardsOptions
+CpAmcl::~CpAmcl() {}
+
+std::string CpAmcl::getName() const { return "AMCL"; }
+
+void CpAmcl::onInitialize()
 {
-  // the name of the goal checker selected in the navigation2 stack
-  std::optional<std::string> goalCheckerId_;
+  initalPosePub_ = getNode()->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
+    "initialpose", rclcpp::QoS(10));
+}
 
-  // the name of the goal checker selected in the navigation2 stack
-  std::optional<std::string> undoControllerName_;
-};
-
-class CbUndoPathBackwards : public CbNav2ZClientBehaviorBase
+void CpAmcl::setInitialPose(const geometry_msgs::msg::PoseWithCovarianceStamped & initialpose)
 {
-public:
-  CbUndoPathBackwards(std::optional<CbUndoPathBackwardsOptions> options = std::nullopt);
+  initalPosePub_->publish(initialpose);
+}
 
-  void onEntry() override;
-
-  void onExit() override;
-
-private:
-  std::shared_ptr<tf2_ros::Buffer> listener;
-
-  CpOdomTracker * odomTracker;
-
-  std::optional<CbUndoPathBackwardsOptions> options_;
-};
 }  // namespace cl_nav2z

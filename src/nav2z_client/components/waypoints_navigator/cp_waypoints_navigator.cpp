@@ -23,61 +23,61 @@
 
 #include <fstream>
 #include <nav2z_client/common.hpp>
-#include <nav2z_client/components/goal_checker_switcher/goal_checker_switcher.hpp>
-#include <nav2z_client/components/odom_tracker/odom_tracker.hpp>
-#include <nav2z_client/components/planner_switcher/planner_switcher.hpp>
+#include <nav2z_client/components/goal_checker_switcher/cp_goal_checker_switcher.hpp>
+#include <nav2z_client/components/odom_tracker/cp_odom_tracker.hpp>
+#include <nav2z_client/components/planner_switcher/cp_planner_switcher.hpp>
 #include <nav2z_client/components/pose/cp_pose.hpp>
-#include <nav2z_client/components/waypoints_navigator/waypoints_navigator.hpp>
+#include <nav2z_client/components/waypoints_navigator/cp_waypoints_navigator.hpp>
 #include <nav2z_client/nav2z_client.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 namespace cl_nav2z
 {
 using namespace std::chrono_literals;
-WaypointNavigator::WaypointNavigator() : currentWaypoint_(0), waypoints_(0) {}
+CpWaypointNavigator::CpWaypointNavigator() : currentWaypoint_(0), waypoints_(0) {}
 
-void WaypointNavigator::onInitialize() { client_ = dynamic_cast<ClNav2Z *>(owner_); }
+void CpWaypointNavigator::onInitialize() { client_ = dynamic_cast<ClNav2Z *>(owner_); }
 
-void WaypointNavigator::onGoalCancelled(ClNav2Z::WrappedResult & /*res*/)
+void CpWaypointNavigator::onGoalCancelled(const ClNav2Z::WrappedResult & /*res*/)
 {
   stopWaitingResult();
 
   this->onNavigationRequestCancelled();
 }
 
-void WaypointNavigator::onGoalAborted(ClNav2Z::WrappedResult & /*res*/)
+void CpWaypointNavigator::onGoalAborted(const ClNav2Z::WrappedResult & /*res*/)
 {
   stopWaitingResult();
 
   this->onNavigationRequestAborted();
 }
 
-void WaypointNavigator::onGoalReached(ClNav2Z::WrappedResult & /*res*/)
+void CpWaypointNavigator::onGoalReached(const ClNav2Z::WrappedResult & /*res*/)
 {
   waypointsEventDispatcher.postWaypointEvent(currentWaypoint_);
   currentWaypoint_++;
   RCLCPP_WARN(
-    getLogger(), "[WaypointNavigator] Goal result received, incrementing waypoint index: %ld",
+    getLogger(), "[CpWaypointNavigator] Goal result received, incrementing waypoint index: %ld",
     currentWaypoint_);
   stopWaitingResult();
 
   onNavigationRequestSucceded();
 }
 
-void WaypointNavigator::rewind(int /*count*/)
+void CpWaypointNavigator::rewind(int /*count*/)
 {
   currentWaypoint_--;
   if (currentWaypoint_ < 0) currentWaypoint_ = 0;
 }
 
-void WaypointNavigator::forward(int count)
+void CpWaypointNavigator::forward(int /*count*/)
 {
   currentWaypoint_++;
   if (currentWaypoint_ >= (long)waypoints_.size() - 1)
     currentWaypoint_ = (long)waypoints_.size() - 1;
 }
 
-void WaypointNavigator::seekName(std::string name)
+void CpWaypointNavigator::seekName(std::string name)
 {
   bool found = false;
 
@@ -87,20 +87,20 @@ void WaypointNavigator::seekName(std::string name)
   {
     auto & nextName = waypointsNames_[currentWaypoint_];
     RCLCPP_INFO(
-      getLogger(), "[WaypointNavigator] seeking ,%ld/%ld candidate waypoint: %s", currentWaypoint_,
-      waypoints_.size(), nextName.c_str());
+      getLogger(), "[CpWaypointNavigator] seeking ,%ld/%ld candidate waypoint: %s",
+      currentWaypoint_, waypoints_.size(), nextName.c_str());
     if (name == nextName)
     {
       found = true;
       RCLCPP_INFO(
-        getLogger(), "[WaypointNavigator] found target waypoint: %s == %s-> found",
+        getLogger(), "[CpWaypointNavigator] found target waypoint: %s == %s-> found",
         nextName.c_str(), name.c_str());
     }
     else
     {
       RCLCPP_INFO(
-        getLogger(), "[WaypointNavigator] current waypoint: %s != %s -> forward", nextName.c_str(),
-        name.c_str());
+        getLogger(), "[CpWaypointNavigator] current waypoint: %s != %s -> forward",
+        nextName.c_str(), name.c_str());
       currentWaypoint_++;
     }
   }
@@ -117,30 +117,30 @@ void WaypointNavigator::seekName(std::string name)
     {
       auto & nextName = waypointsNames_[currentWaypoint_];
       RCLCPP_INFO(
-        getLogger(), "[WaypointNavigator] seeking , candidate waypoint: %s", nextName.c_str());
+        getLogger(), "[CpWaypointNavigator] seeking , candidate waypoint: %s", nextName.c_str());
       if (name == nextName)
       {
         found = true;
         RCLCPP_INFO(
-          getLogger(), "[WaypointNavigator] found target waypoint: %s == %s-> found",
+          getLogger(), "[CpWaypointNavigator] found target waypoint: %s == %s-> found",
           nextName.c_str(), name.c_str());
       }
       else
       {
         RCLCPP_INFO(
-          getLogger(), "[WaypointNavigator] current waypoint: %s != %s -> rewind", nextName.c_str(),
-          name.c_str());
+          getLogger(), "[CpWaypointNavigator] current waypoint: %s != %s -> rewind",
+          nextName.c_str(), name.c_str());
         currentWaypoint_--;
       }
     }
   }
 
   RCLCPP_INFO(
-    getLogger(), "[WaypointNavigator] seekName( %s), previous index: %ld, after index: %ld",
+    getLogger(), "[CpWaypointNavigator] seekName( %s), previous index: %ld, after index: %ld",
     name.c_str(), previousWaypoint, currentWaypoint_);
 }
 
-void WaypointNavigator::stopWaitingResult()
+void CpWaypointNavigator::stopWaitingResult()
 {
   if (succeddedNav2ZClientConnection_.connected())
   {
@@ -152,7 +152,7 @@ void WaypointNavigator::stopWaitingResult()
 
 std::optional<std::shared_future<
   std::shared_ptr<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>>>>
-WaypointNavigator::sendNextGoal(
+CpWaypointNavigator::sendNextGoal(
   std::optional<NavigateNextWaypointOptions> options,
   cl_nav2z::ClNav2Z::SmaccNavigateResultSignal::WeakPtr resultCallback)
 {
@@ -164,11 +164,13 @@ WaypointNavigator::sendNextGoal(
     if ((long)waypointsNames_.size() > currentWaypoint_)
     {
       nextName = waypointsNames_[currentWaypoint_];
-      RCLCPP_INFO(getLogger(), "[WaypointNavigator] sending goal, waypoint: %s", nextName.c_str());
+      RCLCPP_INFO(
+        getLogger(), "[CpWaypointNavigator] sending goal, waypoint: %s", nextName.c_str());
     }
     else
     {
-      RCLCPP_INFO(getLogger(), "[WaypointNavigator] sending goal, waypoint: %ld", currentWaypoint_);
+      RCLCPP_INFO(
+        getLogger(), "[CpWaypointNavigator] sending goal, waypoint: %ld", currentWaypoint_);
     }
 
     ClNav2Z::Goal goal;
@@ -177,10 +179,10 @@ WaypointNavigator::sendNextGoal(
 
     // configuring goal
     goal.pose.header.frame_id = p->getReferenceFrame();
-    goal.pose.header.stamp = getNode()->now();
+    //goal.pose.header.stamp = getNode()->now();
     goal.pose.pose = next;
 
-    auto plannerSwitcher = client_->getComponent<PlannerSwitcher>();
+    auto plannerSwitcher = client_->getComponent<CpPlannerSwitcher>();
     plannerSwitcher->setDefaultPlanners(false);
     if (options && options->controllerName_)
     {
@@ -195,7 +197,7 @@ WaypointNavigator::sendNextGoal(
       RCLCPP_WARN(getLogger(), "[WaypointsNavigator] Configuring default planners");
     }
 
-    auto goalCheckerSwitcher = client_->getComponent<GoalCheckerSwitcher>();
+    auto goalCheckerSwitcher = client_->getComponent<CpGoalCheckerSwitcher>();
 
     if (options && options->goalCheckerName_)
     {
@@ -217,7 +219,7 @@ WaypointNavigator::sendNextGoal(
     // rclcpp::sleep_for(5s);
 
     RCLCPP_INFO(getLogger(), "[WaypointsNavigator] Getting odom tracker");
-    auto odomTracker = client_->getComponent<cl_nav2z::odom_tracker::OdomTracker>();
+    auto odomTracker = client_->getComponent<cl_nav2z::odom_tracker::CpOdomTracker>();
     if (odomTracker != nullptr)
     {
       RCLCPP_INFO(getLogger(), "[WaypointsNavigator] Storing path in odom tracker");
@@ -230,15 +232,19 @@ WaypointNavigator::sendNextGoal(
     }
 
     // SEND GOAL
-    if (!succeddedNav2ZClientConnection_.connected())
-    {
-      this->succeddedNav2ZClientConnection_ =
-        client_->onSucceeded(&WaypointNavigator::onGoalReached, this);
-      this->cancelledNav2ZClientConnection_ =
-        client_->onAborted(&WaypointNavigator::onGoalCancelled, this);
-      this->abortedNav2ZClientConnection_ =
-        client_->onCancelled(&WaypointNavigator::onGoalAborted, this);
-    }
+    // if (!succeddedNav2ZClientConnection_.connected())
+    // {
+    //   this->succeddedNav2ZClientConnection_ =
+    //     client_->onSucceeded(&WaypointNavigator::onGoalReached, this);
+    //   this->cancelledNav2ZClientConnection_ =
+    //     client_->onAborted(&WaypointNavigator::onGoalCancelled, this);
+    //   this->abortedNav2ZClientConnection_ =
+    //     client_->onCancelled(&WaypointNavigator::onGoalAborted, this);
+    // }
+
+    auto callbackptr = resultCallback.lock();
+    succeddedNav2ZClientConnection_ = this->getStateMachine()->createSignalConnection(
+      *callbackptr, &CpWaypointNavigator::onNavigationResult, this);
 
     return client_->sendGoal(goal, resultCallback);
   }
@@ -246,13 +252,33 @@ WaypointNavigator::sendNextGoal(
   {
     RCLCPP_WARN(
       getLogger(),
-      "[WaypointsNavigator] All waypoints were consumed. There is no more waypoints available.");
+      "[CpWaypointsNavigator] All waypoints were consumed. There is no more waypoints available.");
   }
 
   return std::nullopt;
 }
 
-void WaypointNavigator::insertWaypoint(int index, geometry_msgs::msg::Pose & newpose)
+void CpWaypointNavigator::onNavigationResult(const ClNav2Z::WrappedResult & r)
+{
+  if (r.code == rclcpp_action::ResultCode::SUCCEEDED)
+  {
+    this->onGoalReached(r);
+  }
+  else if (r.code == rclcpp_action::ResultCode::ABORTED)
+  {
+    this->onGoalAborted(r);
+  }
+  else if (r.code == rclcpp_action::ResultCode::CANCELED)
+  {
+    this->onGoalCancelled(r);
+  }
+  else
+  {
+    this->onGoalAborted(r);
+  }
+}
+
+void CpWaypointNavigator::insertWaypoint(int index, geometry_msgs::msg::Pose & newpose)
 {
   if (index >= 0 && index <= (int)waypoints_.size())
   {
@@ -260,12 +286,12 @@ void WaypointNavigator::insertWaypoint(int index, geometry_msgs::msg::Pose & new
   }
 }
 
-void WaypointNavigator::setWaypoints(const std::vector<geometry_msgs::msg::Pose> & waypoints)
+void CpWaypointNavigator::setWaypoints(const std::vector<geometry_msgs::msg::Pose> & waypoints)
 {
   this->waypoints_ = waypoints;
 }
 
-void WaypointNavigator::setWaypoints(const std::vector<Pose2D> & waypoints)
+void CpWaypointNavigator::setWaypoints(const std::vector<Pose2D> & waypoints)
 {
   waypoints_.clear();
   waypointsNames_.clear();
@@ -285,7 +311,7 @@ void WaypointNavigator::setWaypoints(const std::vector<Pose2D> & waypoints)
   }
 }
 
-void WaypointNavigator::removeWaypoint(int index)
+void CpWaypointNavigator::removeWaypoint(int index)
 {
   if (index >= 0 && index < (int)waypoints_.size())
   {
@@ -293,12 +319,12 @@ void WaypointNavigator::removeWaypoint(int index)
   }
 }
 
-const std::vector<geometry_msgs::msg::Pose> & WaypointNavigator::getWaypoints() const
+const std::vector<geometry_msgs::msg::Pose> & CpWaypointNavigator::getWaypoints() const
 {
   return waypoints_;
 }
 
-std::optional<geometry_msgs::msg::Pose> WaypointNavigator::getNamedPose(std::string name) const
+std::optional<geometry_msgs::msg::Pose> CpWaypointNavigator::getNamedPose(std::string name) const
 {
   if (this->waypointsNames_.size() > 0)
   {
@@ -314,12 +340,12 @@ std::optional<geometry_msgs::msg::Pose> WaypointNavigator::getNamedPose(std::str
   return std::nullopt;
 }
 
-const std::vector<std::string> & WaypointNavigator::getWaypointNames() const
+const std::vector<std::string> & CpWaypointNavigator::getWaypointNames() const
 {
   return waypointsNames_;
 }
 
-std::optional<std::string> WaypointNavigator::getCurrentWaypointName() const
+std::optional<std::string> CpWaypointNavigator::getCurrentWaypointName() const
 {
   if (currentWaypoint_ >= 0 && currentWaypoint_ < (int)waypointsNames_.size())
   {
@@ -328,12 +354,12 @@ std::optional<std::string> WaypointNavigator::getCurrentWaypointName() const
   return std::nullopt;
 }
 
-long WaypointNavigator::getCurrentWaypointIndex() const { return currentWaypoint_; }
+long CpWaypointNavigator::getCurrentWaypointIndex() const { return currentWaypoint_; }
 
 #define HAVE_NEW_YAMLCPP
-void WaypointNavigator::loadWayPointsFromFile(std::string filepath)
+void CpWaypointNavigator::loadWayPointsFromFile(std::string filepath)
 {
-  RCLCPP_INFO_STREAM(getLogger(), "[WaypointNavigator] Loading file:" << filepath);
+  RCLCPP_INFO_STREAM(getLogger(), "[CpWaypointNavigator] Loading file:" << filepath);
   this->waypoints_.clear();
   std::ifstream ifs(filepath.c_str(), std::ifstream::in);
   if (ifs.good() == false)
@@ -359,7 +385,7 @@ void WaypointNavigator::loadWayPointsFromFile(std::string filepath)
 
     if (wp_node != NULL)
     {
-      for (unsigned int i = 0; i < wp_node->size(); ++i)
+      for (uint64_t i = 0; i < wp_node->size(); ++i)
       {
         // Parse waypoint entries on YAML
         geometry_msgs::msg::Pose wp;
@@ -404,9 +430,9 @@ void WaypointNavigator::loadWayPointsFromFile(std::string filepath)
   }
 }
 
-void WaypointNavigator::loadWayPointsFromFile2(std::string filepath)
+void CpWaypointNavigator::loadWayPointsFromFile2(std::string filepath)
 {
-  RCLCPP_INFO_STREAM(getLogger(), "[WaypointNavigator] Loading file:" << filepath);
+  RCLCPP_INFO_STREAM(getLogger(), "[CpWaypointNavigator] Loading file:" << filepath);
   this->waypoints_.clear();
   std::ifstream ifs(filepath.c_str(), std::ifstream::in);
   if (ifs.good() == false)
@@ -432,7 +458,7 @@ void WaypointNavigator::loadWayPointsFromFile2(std::string filepath)
 
     if (wp_node != NULL)
     {
-      for (unsigned int i = 0; i < wp_node->size(); ++i)
+      for (uint64_t i = 0; i < wp_node->size(); ++i)
       {
         // Parse waypoint entries on YAML
         geometry_msgs::msg::Pose wp;
