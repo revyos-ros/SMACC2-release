@@ -24,9 +24,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <smacc2/smacc_asynchronous_client_behavior.hpp>
 
-namespace smacc2
-{
-namespace client_behaviors
+namespace smacc2::client_behaviors
 {
 using namespace std::chrono_literals;
 
@@ -44,5 +42,4 @@ protected:
 
   rclcpp::Rate rate_;
 };
-}  // namespace client_behaviors
-}  // namespace smacc2
+}  // namespace smacc2::client_behaviors
