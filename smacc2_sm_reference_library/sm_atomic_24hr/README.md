@@ -1,9 +1,8 @@
  <h2>State Machine Diagram</h2>
 
- ! New Image required
+![sm_atomic_24hr](docs/SmAtomic24Hr_2023-5-25_72056.svg)
 
- <h2>Description</h2> A completely minimal state machine example.<br></br>
-<a href="https://robosoft-ai.github.io/smacc2_doxygen/master/html/namespacesm__atomic.html">Doxygen Namespace & Class Reference</a>
+ <h2>Description</h2> A completely minimal state machine example designed to run for 24 hours.<br></br>
 
  <h2>Build Instructions</h2>
 
@@ -12,7 +11,7 @@ First, source your chosen ros2 distro.
 source /opt/ros/rolling/setup.bash
 ```
 ```
-source /opt/ros/galactic/setup.bash
+source /opt/ros/humble/setup.bash
 ```
 
 Before you build, make sure you've installed all the dependencies...
@@ -30,7 +29,7 @@ colcon build
 After you build, remember to source the proper install folder...
 
 ```
-source ~/colcon_ws/install/setup.bash
+source ~/workspace/humble_ws/install/setup.bash
 ```
 
 And then run the launch file...
