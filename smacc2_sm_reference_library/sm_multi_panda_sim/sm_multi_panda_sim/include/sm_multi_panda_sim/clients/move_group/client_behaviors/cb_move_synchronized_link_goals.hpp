@@ -21,27 +21,27 @@
 #pragma once
 
 #include <sensor_msgs/msg/joint_state.hpp>
-#include <move_group_interface_client/common.hpp>
-#include <move_group_interface_client/cl_movegroup.hpp>
+#include <moveit2z_client/common.hpp>
+#include <moveit2z_client/cl_moveit2z.hpp>
 
 #include <smacc2/smacc_asynchronous_client_behavior.hpp>
 #include <condition_variable>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <std_msgs/msg/string.hpp>
 
-namespace cl_move_group_interface
+namespace cl_moveit2z
 {
 class CbMoveSynchronizedLinkGoals : public smacc2::SmaccAsyncClientBehavior
 {
 public:
-  CbMoveSynchronizedLinkGoals(const std::vector<geometry_msgs::msg::PoseStamped>& poses, const std::vector<std::string>& names)
+  CbMoveSynchronizedLinkGoals(const std::vector<geometry_msgs::msg::PoseStamped>& /*poses*/, const std::vector<std::string>& /*names*/)
   {
 
   }
 
   void onEntry() override
   {
-    ClMoveGroup * movegroupClient_;
+    ClMoveit2z * movegroupClient_;
     requiresClient(movegroupClient_);
 
     //auto group_name = movegroupClient_->getOptions().group_name_;
@@ -66,7 +66,7 @@ public:
     }
 
 private:
-  void onMessageReceived(const sensor_msgs::msg::JointState & msg)
+  void onMessageReceived(const sensor_msgs::msg::JointState & /*msg*/)
   {
       postSuccessEvent();
       mutex.unlock();
