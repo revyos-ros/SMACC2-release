@@ -53,7 +53,7 @@ public:
     RCLCPP_DEBUG_STREAM(
       getLogger(), "[" << this->getName() << "] making service request to " << serviceName_);
 
-    resultFuture_ = client_->async_send_request(request_);
+    resultFuture_ = client_->async_send_request(request_).future.share();
 
     std::future_status status = resultFuture_.wait_for(0s);
 
@@ -81,7 +81,8 @@ public:
     }
   }
 
-  typename rclcpp::Client<ServiceType>::SharedFuture resultFuture_;
+  std::shared_future<std::shared_ptr<typename ServiceType::Response>> resultFuture_;
+
   typename std::shared_ptr<typename ServiceType::Response> result_;
   std::chrono::milliseconds pollRate_;
 
