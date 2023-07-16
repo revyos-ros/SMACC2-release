@@ -21,13 +21,13 @@
 #pragma once
 
 #include <sensor_msgs/msg/joint_state.hpp>
-#include <move_group_interface_client/common.hpp>
-#include <move_group_interface_client/cl_movegroup.hpp>
+#include <moveit2z_client/common.hpp>
+#include <moveit2z_client/cl_moveit2z.hpp>
 
 #include <smacc2/smacc_asynchronous_client_behavior.hpp>
 #include <condition_variable>
 
-namespace cl_move_group_interface
+namespace cl_moveit2z
 {
 class CbWaitJointState : public smacc2::SmaccAsyncClientBehavior
 {
@@ -39,7 +39,7 @@ public:
 
   void onEntry() override
   {
-    ClMoveGroup * movegroupClient_;
+    ClMoveit2z * movegroupClient_;
     requiresClient(movegroupClient_);
 
     //auto group_name = movegroupClient_->getOptions().group_name_;
@@ -70,7 +70,7 @@ public:
     }
 
 private:
-  void onMessageReceived(const sensor_msgs::msg::JointState & msg)
+  void onMessageReceived(const sensor_msgs::msg::JointState & /*msg*/)
   {
       RCLCPP_INFO(getLogger(), "CbWaitJointState::onMessageReceived, posting event");
       postSuccessEvent();
