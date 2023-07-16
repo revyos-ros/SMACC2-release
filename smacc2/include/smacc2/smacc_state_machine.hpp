@@ -64,7 +64,9 @@ enum class StateMachineInternalAction
 class ISmaccStateMachine
 {
 public:
-  ISmaccStateMachine(std::string stateMachineName, SignalDetector * signalDetector);
+  ISmaccStateMachine(
+    std::string stateMachineName, SignalDetector * signalDetector,
+    rclcpp::NodeOptions nodeOptions = rclcpp::NodeOptions());
 
   virtual ~ISmaccStateMachine();
 
@@ -77,10 +79,20 @@ public:
   template <typename TOrthogonal>
   TOrthogonal * getOrthogonal();
 
+  // gets the client behavior in a given orthogonal
+  // the index is used to distinguish between multiple client behaviors of the same type
+  template <typename TOrthogonal, typename TClientBehavior>
+  inline TClientBehavior * getClientBehavior(int index = 0)
+  {
+    auto orthogonal = this->template getOrthogonal<TOrthogonal>();
+
+    return orthogonal->template getClientBehavior<TClientBehavior>(index);
+  }
+
   const std::map<std::string, std::shared_ptr<smacc2::ISmaccOrthogonal>> & getOrthogonals() const;
 
   template <typename SmaccComponentType>
-  void requiresComponent(SmaccComponentType *& storage, bool throwsException = false);
+  void requiresComponent(SmaccComponentType *& storage, bool throwsExceptionIfNotExist = false);
 
   template <typename EventType>
   void postEvent(EventType * ev, EventLifeTime evlifetime = EventLifeTime::ABSOLUTE);
@@ -183,6 +195,8 @@ protected:
 
   // orthogonals
   std::map<std::string, std::shared_ptr<smacc2::ISmaccOrthogonal>> orthogonals_;
+
+  std::vector<boost::signals2::scoped_connection> longLivedSignalConnections_;
 
 protected:
   std::shared_ptr<SmaccStateMachineInfo> stateMachineInfo_;

@@ -94,6 +94,7 @@ void ISmaccStateMachine::createOrthogonal()
 {
   //this->lockStateMachine("create orthogonal");
   std::lock_guard<std::recursive_mutex> guard(m_mutex_);
+
   std::string orthogonalkey = demangledTypeName<TOrthogonal>();
 
   if (orthogonals_.count(orthogonalkey) == 0)
@@ -215,7 +216,7 @@ template <typename EventType>
 void ISmaccStateMachine::postEvent(EventLifeTime evlifetime)
 {
   auto evname = smacc2::introspection::demangleSymbol<EventType>();
-  RCLCPP_INFO_STREAM(getLogger(), "Event " << evname);
+  RCLCPP_DEBUG_STREAM(getLogger(), "Event " << evname);
   auto * ev = new EventType();
   this->postEvent(ev, evlifetime);
 }
@@ -432,6 +433,13 @@ boost::signals2::connection ISmaccStateMachine::createSignalConnection(
     std::is_base_of<ISmaccOrthogonal, TSmaccObjectType>::value ||
     std::is_base_of<ISmaccStateMachine, TSmaccObjectType>::value)
   {
+    RCLCPP_INFO(
+      getLogger(),
+      "[StateMachine] long life-time smacc signal subscription created. Subscriber is %s. Callback "
+      "is: %s",
+      demangledTypeName<TSmaccObjectType>().c_str(),
+      demangleSymbol(typeid(callback).name()).c_str());
+
     connection = binder.bindaux(signal, callback, object, nullptr);
   }
   else if (
@@ -480,7 +488,7 @@ void ISmaccStateMachine::notifyOnStateEntryStart(StateType * state)
 
   RCLCPP_DEBUG(
     getLogger(),
-    "[State Machne] Initializing a new state '%s' and updating current state. Getting state "
+    "[State Machne] Initializating a new state '%s' and updating current state. Getting state "
     "meta-information. number of orthogonals: %ld",
     demangleSymbol(typeid(StateType).name()).c_str(), this->orthogonals_.size());
 

@@ -33,17 +33,16 @@ namespace smacc2
 using namespace std::chrono_literals;
 using namespace smacc2::introspection;
 ISmaccStateMachine::ISmaccStateMachine(
-  std::string stateMachineName, SignalDetector * signalDetector)
+  std::string stateMachineName, SignalDetector * signalDetector, rclcpp::NodeOptions nodeOptions)
 : nh_(nullptr), stateSeqCounter_(0)
 {
-  rclcpp::NodeOptions node_options;
   // This enables loading arbitrary parameters
   // However, best practice would be to declare parameters in the corresponding classes
   // and provide descriptions about expected use
   // TODO(henningkayser): remove once all parameters are declared inside the components
   // node_options.automatically_declare_parameters_from_overrides(true);
 
-  nh_ = rclcpp::Node::make_shared(stateMachineName, node_options);  //
+  nh_ = rclcpp::Node::make_shared(stateMachineName, nodeOptions);  //
   RCLCPP_INFO_STREAM(
     nh_->get_logger(), "Creating State Machine Base: " << nh_->get_fully_qualified_name());
 
@@ -168,11 +167,11 @@ void ISmaccStateMachine::initializeROS(std::string shortname)
   RCLCPP_WARN_STREAM(nh_->get_logger(), "State machine base creation:" << shortname);
   // STATE MACHINE TOPICS
   stateMachinePub_ = nh_->create_publisher<smacc2_msgs::msg::SmaccStateMachine>(
-    shortname + "/smacc/state_machine_description", 1);
-  stateMachineStatusPub_ =
-    nh_->create_publisher<smacc2_msgs::msg::SmaccStatus>(shortname + "/smacc/status", 1);
+    shortname + "/smacc/state_machine_description", rclcpp::QoS(1));
+  stateMachineStatusPub_ = nh_->create_publisher<smacc2_msgs::msg::SmaccStatus>(
+    shortname + "/smacc/status", rclcpp::QoS(1));
   transitionLogPub_ = nh_->create_publisher<smacc2_msgs::msg::SmaccTransitionLogEntry>(
-    shortname + "/smacc/transition_log", 1);
+    shortname + "/smacc/transition_log", rclcpp::QoS(1));
 
   // STATE MACHINE SERVICES
   transitionHistoryService_ = nh_->create_service<smacc2_msgs::srv::SmaccGetTransitionHistory>(

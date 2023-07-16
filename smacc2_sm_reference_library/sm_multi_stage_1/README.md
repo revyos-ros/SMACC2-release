@@ -4,8 +4,6 @@
 
  <h2>Description</h2> A large multi stage state machine that demonstrates that the NxN problem is not as formidable as some would have you believe.<br></br>
 
-<a href="https://robosoft-ai.github.io/SMACC2_Documentation/master/html/namespacesm__multi__stage__1.html">Doxygen Namespace & Class Reference</a>
-
  <h2>Build Instructions</h2>
 
 First, source your chosen ros2 distro.
@@ -13,7 +11,7 @@ First, source your chosen ros2 distro.
 source /opt/ros/rolling/setup.bash
 ```
 ```
-source /opt/ros/galactic/setup.bash
+source /opt/ros/humble/setup.bash
 ```
 
 Before you build, make sure you've installed all the dependencies...
@@ -31,7 +29,7 @@ colcon build
 After you build, remember to source the proper install folder...
 
 ```
-source ~/colcon_ws/install/setup.bash
+source ~/workspace/humble_ws/install/setup.bash
 ```
 
 And then run the launch file...
