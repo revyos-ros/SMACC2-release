@@ -17,14 +17,27 @@
  * 	 Authors: Pablo Inigo Blasco, Brett Aldrich
  *
  ******************************************************************************************************************/
+#pragma once
 
-#include <nav2z_client/components/waypoints_navigator/waypoints_event_dispatcher.hpp>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
+#include <smacc2/smacc.hpp>
 
 namespace cl_nav2z
 {
-void WaypointEventDispatcher::postWaypointEvent(int index)
+class CpAmcl : public smacc2::ISmaccComponent
 {
-  auto & fn = postWaypointFn[index % WAYPOINTS_EVENTCOUNT];
-  if (fn != nullptr) fn();
-}
+public:
+  CpAmcl();
+  virtual ~CpAmcl();
+
+  std::string getName() const override;
+
+  void onInitialize() override;
+
+  void setInitialPose(const geometry_msgs::msg::PoseWithCovarianceStamped & initialpose);
+
+private:
+  rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initalPosePub_;
+};
+
 }  // namespace cl_nav2z

@@ -19,7 +19,7 @@
  ******************************************************************************************************************/
 #pragma once
 
-#include <nav2z_client/components/waypoints_navigator/waypoints_event_dispatcher.hpp>
+#include <nav2z_client/components/waypoints_navigator/cp_waypoints_event_dispatcher.hpp>
 #include <nav2z_client/nav2z_client.hpp>
 #include <smacc2/smacc.hpp>
 
@@ -52,14 +52,14 @@ struct NavigateNextWaypointOptions
 // This component contains a list of waypoints. These waypoints can
 // be iterated in the different states using CbNextWaiPoint
 // waypoint index is only incremented if the current waypoint is successfully reached
-class WaypointNavigator : public smacc2::ISmaccComponent
+class CpWaypointNavigator : public smacc2::ISmaccComponent
 {
 public:
   WaypointEventDispatcher waypointsEventDispatcher;
 
   ClNav2Z * client_;
 
-  WaypointNavigator();
+  CpWaypointNavigator();
 
   void onInitialize() override;
 
@@ -109,9 +109,11 @@ private:
 
   void removeWaypoint(int index);
 
-  void onGoalReached(ClNav2Z::WrappedResult & res);
-  void onGoalCancelled(ClNav2Z::WrappedResult & /*res*/);
-  void onGoalAborted(ClNav2Z::WrappedResult & /*res*/);
+  void onNavigationResult(const ClNav2Z::WrappedResult & r);
+
+  void onGoalReached(const ClNav2Z::WrappedResult & res);
+  void onGoalCancelled(const ClNav2Z::WrappedResult & /*res*/);
+  void onGoalAborted(const ClNav2Z::WrappedResult & /*res*/);
 
   std::vector<geometry_msgs::msg::Pose> waypoints_;
 

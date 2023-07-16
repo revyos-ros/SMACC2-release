@@ -23,6 +23,11 @@
 #include <smacc2/smacc.hpp>
 
 namespace cl_nav2z
+
+/// @cond
+// The purpose of the cond and endcond tags seen above and below in this file are there to prevent doxygen from indexing the 256 events
+// below which makes the documentation produced unuseable.
+
 {
 template <typename TSource, typename TOrthogonal>
 struct EvWaypoint0 : sc::event<EvWaypoint0<TSource, TOrthogonal>>
@@ -1566,6 +1571,9 @@ struct EvWaypoint256 : sc::event<EvWaypoint256<TSource, TOrthogonal>>
   int waypointIndex;
 };
 
+// Doxygen endcond tag
+/// @endcond
+
 class ClNav2Z;
 
 #define WAYPOINTS_EVENTCOUNT 257
@@ -1590,6 +1598,8 @@ void configurePostEvWaypoint(std::function<void()> * fntarget, ClNav2Z * client,
 template <typename TDerived, typename TOrthogonal>
 void WaypointEventDispatcher::initialize(ClNav2Z * client)
 {
+  // Doygen cond tag
+  /// @cond
   configurePostEvWaypoint<EvWaypoint0<TDerived, TOrthogonal>>(postWaypointFn, client, 0);
   configurePostEvWaypoint<EvWaypoint1<TDerived, TOrthogonal>>(postWaypointFn, client, 1);
   configurePostEvWaypoint<EvWaypoint2<TDerived, TOrthogonal>>(postWaypointFn, client, 2);
@@ -1847,6 +1857,8 @@ void WaypointEventDispatcher::initialize(ClNav2Z * client)
   configurePostEvWaypoint<EvWaypoint254<TDerived, TOrthogonal>>(postWaypointFn, client, 254);
   configurePostEvWaypoint<EvWaypoint255<TDerived, TOrthogonal>>(postWaypointFn, client, 255);
   configurePostEvWaypoint<EvWaypoint256<TDerived, TOrthogonal>>(postWaypointFn, client, 256);
+  // Doxygen endcond tag
+  /// @endcond
 }
 
 }  // namespace cl_nav2z
