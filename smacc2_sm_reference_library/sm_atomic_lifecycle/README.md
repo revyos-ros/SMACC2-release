@@ -1,9 +1,8 @@
  <h2>State Machine Diagram</h2>
 
- ![sm_atomic_lifecycle](docs/SmAtomicLifecycle_2021-10-18_93942.svg)
+ ![sm_atomic_lifecycle](docs/SmAtomicLifecycle_2023-5-25_72845.svg)
 
- <h2>Description</h2> A completely minimal state machine example.<br></br>
-<a href="https://robosoft-ai.github.io/smacc2_doxygen/master/html/namespacesm__atomic.html">Doxygen Namespace & Class Reference</a>
+ <h2>Description</h2> A completely minimal state machine example that also demonstartes the capabilities of the new SMACC Lifecycle Client Behavior Library<br></br>
 
  <h2>Build Instructions</h2>
 
@@ -12,7 +11,7 @@ First, source your chosen ros2 distro.
 source /opt/ros/rolling/setup.bash
 ```
 ```
-source /opt/ros/galactic/setup.bash
+source /opt/ros/humble/setup.bash
 ```
 
 Before you build, make sure you've installed all the dependencies...
@@ -30,13 +29,13 @@ colcon build
 After you build, remember to source the proper install folder...
 
 ```
-source ~/colcon_ws/install/setup.bash
+source ~/workspace/humble_ws/install/setup.bash
 ```
 
 And then run the launch file...
 
 ```
-ros2 launch sm_atomic_lifecycle sm_atomic_lifecycle.launch
+ros2 launch sm_atomic_lifecycle sm_atomic_lifecycle.py
 ```
 
  <h2>Viewer Instructions</h2>
