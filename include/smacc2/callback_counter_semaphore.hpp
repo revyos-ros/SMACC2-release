@@ -19,27 +19,33 @@
  ******************************************************************************************************************/
 
 #pragma once
-
-#include <functional>
+#include <boost/signals2.hpp>
+#include <condition_variable>
+#include <iostream>
+#include <mutex>
 #include <rclcpp/rclcpp.hpp>
-#include <smacc2/smacc_asynchronous_client_behavior.hpp>
+#include <thread>
 
-namespace smacc2::client_behaviors
+namespace smacc2
 {
-using namespace std::chrono_literals;
-
-// Asynchronous behavior that waits to a topic message to send EvCbSuccess event
-// a guard function can be set to use conditions on the contents
-class CbWaitNode : public smacc2::SmaccAsyncClientBehavior
+class CallbackCounterSemaphore
 {
 public:
-  CbWaitNode(std::string nodeName);
+  CallbackCounterSemaphore(std::string name, int count = 0);
+  bool acquire();
 
-  void onEntry() override;
+  void release();
 
-protected:
-  std::string nodeName_;
+  void finalize();
 
-  rclcpp::Rate rate_;
+  void addConnection(boost::signals2::connection conn);
+
+private:
+  int count_;
+  std::mutex mutex_;
+  std::condition_variable cv_;
+  std::vector<boost::signals2::connection> connections_;
+  bool finalized = false;
+  std::string name_;
 };
-}  // namespace smacc2::client_behaviors
+}  // namespace smacc2
