@@ -1,0 +1,76 @@
+ros-humble-sm-multi-panda-sim (2.3.16-1jammy) jammy; urgency=high
+
+  * Merge branch 'humble' of https://github.com/robosoft-ai/SMACC2 into humble
+  * Brettpac branch (#518 <https://github.com/robosoft-ai/SMACC2/issues/518>)
+    * Attempt to fix weird issue with ros buildfarm
+    * More on this buildfarm issue
+    ---------
+    Co-authored-by: brettpac <mailto:brettpac@pop-os.localdomain>
+  * Contributors: brettpac, pabloinigoblasco
+
+ -- SMACC2 is cool <smacc2@smacc2.cool>  Sun, 16 Jul 2023 00:00:00 -0000
+
+ros-humble-sm-multi-panda-sim (2.3.6-1jammy) jammy; urgency=high
+
+  * minor
+  * Contributors: pabloinigoblasco
+  * fix
+  * version
+  * removing mongo dependency (#402 <https://github.com/robosoft-ai/SMACC2/issues/402>)
+    * removing mongo dependency
+    * fix
+    * fix
+  * Contributors: Pablo Iñigo Blasco, pabloinigoblasco
+
+ -- SMACC2 is cool <smacc2@smacc2.cool>  Sun, 12 Mar 2023 00:00:00 -0000
+
+ros-humble-sm-multi-panda-sim (2.3.3-1jammy) jammy; urgency=high
+
+
+
+ -- SMACC2 is cool <smacc2@smacc2.cool>  Thu, 02 Mar 2023 22:58:00 -0000
+
+ros-humble-sm-multi-panda-sim (2.3.2-1jammy) jammy; urgency=high
+
+  * Feature/format fix humble (#383 <https://github.com/robosoft-ai/SMACC2/issues/383>)
+    * several changes for panda demo
+    * panda configs
+    * updating and refactoring code
+    * fixing format check
+    * fixing format
+    * missing
+    * fixing format
+    * format fix
+    * humble moveit environment
+    * fixes
+    * missing
+    * minor
+    * missing
+    * missing
+    * fix
+    * fixing
+    * fixing format fix
+    * fix
+  * Contributors: Pablo Iñigo Blasco
+
+ -- SMACC2 is cool <smacc2@smacc2.cool>  Thu, 02 Mar 2023 22:22:00 -0000
+
+ros-humble-sm-multi-panda-sim (2.3.1-1jammy) jammy; urgency=high
+
+
+
+ -- SMACC2 is cool <smacc2@smacc2.cool>  Mon, 28 Nov 2022 00:00:00 -0000
+
+ros-humble-sm-multi-panda-sim (1.22.1-1jammy) jammy; urgency=high
+
+
+
+ -- SMACC2 is cool <smacc2@smacc2.cool>  Wed, 09 Nov 2022 20:22:00 -0000
+
+ros-humble-sm-multi-panda-sim (1.22.0-1jammy) jammy; urgency=high
+
+
+
+ -- SMACC2 is cool <smacc2@smacc2.cool>  Wed, 09 Nov 2022 19:53:00 -0000
+
+
