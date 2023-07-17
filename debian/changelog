@@ -1,0 +1,123 @@
+ros-humble-sm-atomic-mode-states (2.4.1-1jammy) jammy; urgency=high
+
+  * version update
+  * Brettpac branch (#491 <https://github.com/robosoft-ai/SMACC2/issues/491>)
+    * Testing and cleaning the refernce library
+    * More manicuring
+    * Deactivating trailing space precommit that keeps flagging svgs
+    * Updating sm svgs
+    ---------
+    Co-authored-by: brettpac <mailto:brettpac@pop-os.localdomain>
+  * Testing and cleaning the refernce library (#489 <https://github.com/robosoft-ai/SMACC2/issues/489>)
+    Co-authored-by: brettpac <mailto:brettpac@pop-os.localdomain>
+  * Brettpac branch (#487 <https://github.com/robosoft-ai/SMACC2/issues/487>)
+    * fixing trailing whitespace in svg issue
+    * Removing doxygen references for reference library in humble
+    ---------
+    Co-authored-by: brettpac <mailto:brettpac@pop-os.localdomain>
+  * Cleaning Docs Rd.1 (#485 <https://github.com/robosoft-ai/SMACC2/issues/485>)
+    * Cleaning Docs Rd.1
+    * fixing doxygen links
+    ---------
+    Co-authored-by: brettpac <mailto:brettpac@pop-os.localdomain>
+  * Contributors: brettpac, pabloinigoblasco
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Thu, 06 Jul 2023 00:00:00 -0000
+
+ros-humble-sm-atomic-mode-states (2.3.16-1jammy) jammy; urgency=high
+
+  * minor
+  * Merge branch 'humble' of https://github.com/robosoft-ai/SMACC2 into humble
+  * Brettpac branch (#518 <https://github.com/robosoft-ai/SMACC2/issues/518>)
+    * Attempt to fix weird issue with ros buildfarm
+    * More on this buildfarm issue
+    ---------
+    Co-authored-by: brettpac <mailto:brettpac@pop-os.localdomain>
+  * Contributors: brettpac, pabloinigoblasco
+  * Merge branch 'humble' of https://github.com/robosoft-ai/SMACC2 into humble
+  * Brettpac branch (#518 <https://github.com/robosoft-ai/SMACC2/issues/518>)
+    * Attempt to fix weird issue with ros buildfarm
+    * More on this buildfarm issue
+    ---------
+    Co-authored-by: brettpac <mailto:brettpac@pop-os.localdomain>
+  * Contributors: brettpac, pabloinigoblasco
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Sun, 16 Jul 2023 00:00:00 -0000
+
+ros-humble-sm-atomic-mode-states (2.3.14-1jammy) jammy; urgency=high
+
+  * Feature/humble 2.3.14 b (#463 <https://github.com/robosoft-ai/SMACC2/issues/463>)
+    * minor
+    * version
+    * fix
+  * Feature/humble 2.3.14 (#462 <https://github.com/robosoft-ai/SMACC2/issues/462>)
+    * minor
+    * version
+  * migration to humble (#439 <https://github.com/robosoft-ai/SMACC2/issues/439>)
+    * migration to humble
+    * missing format
+  * Contributors: Pablo Iñigo Blasco
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Mon, 24 Apr 2023 00:00:00 -0000
+
+ros-humble-sm-atomic-mode-states (2.3.8-1jammy) jammy; urgency=high
+
+
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Sun, 12 Mar 2023 21:50:00 -0000
+
+ros-humble-sm-atomic-mode-states (2.3.7-1jammy) jammy; urgency=high
+
+
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Sun, 12 Mar 2023 21:45:00 -0000
+
+ros-humble-sm-atomic-mode-states (2.3.6-1jammy) jammy; urgency=high
+
+
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Sun, 12 Mar 2023 20:30:00 -0000
+
+ros-humble-sm-atomic-mode-states (2.3.5-1jammy) jammy; urgency=high
+
+
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Tue, 07 Mar 2023 00:14:00 -0000
+
+ros-humble-sm-atomic-mode-states (2.3.4-1jammy) jammy; urgency=high
+
+
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Tue, 07 Mar 2023 00:02:00 -0000
+
+ros-humble-sm-atomic-mode-states (2.3.3-1jammy) jammy; urgency=high
+
+
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Thu, 02 Mar 2023 22:58:00 -0000
+
+ros-humble-sm-atomic-mode-states (2.3.2-1jammy) jammy; urgency=high
+
+
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Thu, 02 Mar 2023 22:22:00 -0000
+
+ros-humble-sm-atomic-mode-states (2.3.1-1jammy) jammy; urgency=high
+
+
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Mon, 28 Nov 2022 00:00:00 -0000
+
+ros-humble-sm-atomic-mode-states (1.22.1-1jammy) jammy; urgency=high
+
+
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Wed, 09 Nov 2022 20:22:00 -0000
+
+ros-humble-sm-atomic-mode-states (1.22.0-1jammy) jammy; urgency=high
+
+
+
+ -- Pablo Inigo Blasco <pablo@ibrobotics.com>  Wed, 09 Nov 2022 19:53:00 -0000
+
+
