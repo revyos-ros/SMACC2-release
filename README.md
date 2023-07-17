@@ -1,3 +1,70 @@
+## smacc2 (humble) - 2.3.16-1
+
+The packages in the `smacc2` repository were released into the `humble` distro by running `/usr/bin/bloom-release --ros-distro humble --track humble smacc2` on `Mon, 17 Jul 2023 07:17:23 -0000`
+
+These packages were released:
+- `backward_global_planner`
+- `backward_local_planner`
+- `eg_conditional_generator`
+- `eg_random_generator`
+- `forward_global_planner`
+- `forward_local_planner`
+- `keyboard_client`
+- `lifecyclenode_client`
+- `moveit2z_client`
+- `multirole_sensor_client`
+- `nav2z_client`
+- `nav2z_planners_common`
+- `panda_arm_1_moveit_config`
+- `panda_arm_2_moveit_config`
+- `pure_spinning_local_planner`
+- `ros_publisher_client`
+- `ros_timer_client`
+- `sm_advanced_recovery_1`
+- `sm_atomic`
+- `sm_atomic_24hr`
+- `sm_atomic_lifecycle`
+- `sm_atomic_mode_states`
+- `sm_atomic_performance_trace_1`
+- `sm_atomic_services`
+- `sm_atomic_subscribers_performance_test`
+- `sm_branching`
+- `sm_coretest_transition_speed_1`
+- `sm_dance_bot`
+- `sm_dance_bot_warehouse`
+- `sm_dance_bot_warehouse_2`
+- `sm_dance_bot_warehouse_3`
+- `sm_dance_bot_warehouse_4`
+- `sm_multi_panda_sim`
+- `sm_multi_stage_1`
+- `sm_pack_ml`
+- `sm_panda_moveit2z_cb_inventory`
+- `sm_pubsub_1`
+- `sm_three_some`
+- `smacc2`
+- `smacc2_msgs`
+- `sr_all_events_go`
+- `sr_conditional`
+- `sr_event_countdown`
+- `undo_path_global_planner`
+
+Version of package(s) in repository `smacc2`:
+
+- upstream repository: https://github.com/robosoft-ai/SMACC2.git
+- release repository: https://github.com/robosoft-ai/SMACC2-release.git
+- rosdistro version: `2.3.8-1`
+- old version: `2.3.8-1`
+- new version: `2.3.16-1`
+
+Versions of tools used:
+
+- bloom version: `0.11.2`
+- catkin_pkg version: `0.5.2`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## smacc2 (foxy) - 2.1.21-1
 
 The packages in the `smacc2` repository were released into the `foxy` distro by running `/usr/bin/bloom-release -y --no-web --ros-distro foxy --override-release-repository-push-url https://github.com/robosoft-ai/SMACC2-release --debug smacc2` on `Sun, 23 Apr 2023 23:37:36 -0000`
