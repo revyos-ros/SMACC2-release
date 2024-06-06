@@ -1,0 +1,12 @@
+Source: ros-humble-keyboard-client
+Section: misc
+Priority: optional
+Maintainer: Pablo Inigo Blasco <pablo@ibrobotics.com>
+Build-Depends: debhelper (>= 9.0.0), ros-humble-ament-cmake, ros-humble-smacc2, ros-humble-std-msgs, ros-humble-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-humble-keyboard-client
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-humble-smacc2, ros-humble-std-msgs, ros-humble-ros-workspace
+Description: The keyboard_client package
